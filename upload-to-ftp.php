@@ -29,6 +29,7 @@ function upload_to_ftp_init() {
 	$u2ftp_options['ftp_password'] = '';
 	$u2ftp_options['ftp_port'] = 21;
 	$u2ftp_options['ftp_dir'] = '/public_html/';
+	$u2ftp_options['html_link_url'] = 'http://';
 	$u2ftp_options['rename_file'] = 1;
 	add_option('U2FTP_options', $u2ftp_options, 'Upload to FTP Options');
 }
