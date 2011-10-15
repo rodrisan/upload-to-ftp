@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Upload to FTP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-12 19:50+0800\n"
-"PO-Revision-Date: 2011-10-12 19:50+0800\n"
+"POT-Creation-Date: 2011-10-15 17:13+0800\n"
+"PO-Revision-Date: 2011-10-15 17:13+0800\n"
 "Last-Translator: Richer Yang <fantasyworldidvtw@gmail.com>\n"
 "Language-Team:  <fantasyworldidvtw@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -19,91 +19,103 @@ msgstr ""
 msgid "Settings"
 msgstr "設定"
 
-#: ../admin.php:15
+#: ../admin.php:14
+msgid "to FTP"
+msgstr "上傳到 FTP"
+
+#: ../admin.php:30
+msgid "un-upload"
+msgstr "未上傳"
+
+#: ../admin.php:38
 msgid "Upload to FTP"
 msgstr "Upload to FTP"
 
-#: ../admin.php:24
-msgid "Your server does not support FTP-related functions"
-msgstr "你的伺服器不支援 FTP 相關函式"
-
-#: ../admin.php:40
-msgid "FTP connect error"
-msgstr "FTP 連結失敗"
-
 #: ../admin.php:45
-msgid "FTP login error with username"
-msgstr "FTP 登入失敗 使用者帳號："
-
-#: ../admin.php:51
-msgid "FTP open directory failure"
-msgstr "FTP 開啟指定目錄失敗"
-
-#: ../admin.php:55
-msgid "FTP is not writable"
-msgstr "FTP 是不可寫入的"
-
-#: ../admin.php:64
-msgid "Updated FTP Options Success"
-msgstr "成功的更新FTP設定"
-
-#: ../admin.php:72
-msgid "Updated Basic Options Success"
-msgstr "成功的基本更新設定"
-
-#: ../admin.php:80
 msgid "Upload to FTP Options"
 msgstr "Upload to FTP 設定"
 
+#: ../admin.php:51
+msgid "Your server does not support FTP-related functions"
+msgstr "你的伺服器不支援 FTP 相關函式"
+
+#: ../admin.php:74
+msgid "FTP connect error"
+msgstr "FTP 連結失敗"
+
+#: ../admin.php:79
+msgid "FTP login error with username"
+msgstr "FTP 登入失敗 使用者帳號："
+
 #: ../admin.php:85
+msgid "FTP open directory failure"
+msgstr "FTP 開啟指定目錄失敗"
+
+#: ../admin.php:89
+msgid "FTP is not writable"
+msgstr "FTP 是不可寫入的"
+
+#: ../admin.php:114
+msgid "Updated FTP Options Success"
+msgstr "成功的更新FTP設定"
+
+#: ../admin.php:122
+msgid "Updated Basic Options Success"
+msgstr "成功的基本更新設定"
+
+#: ../admin.php:132
 msgid "FTP Options"
 msgstr "FTP 設定"
 
-#: ../admin.php:88
+#: ../admin.php:135
 msgid "FTP Host:"
 msgstr "FTP 主機："
 
-#: ../admin.php:94
+#: ../admin.php:141
 msgid "FTP Username:"
 msgstr "FTP 使用者名稱："
 
-#: ../admin.php:100
+#: ../admin.php:147
 msgid "FTP Password:"
 msgstr "FTP 密碼："
 
-#: ../admin.php:106
+#: ../admin.php:153
 msgid "FTP Port:"
 msgstr "FTP 連接埠："
 
-#: ../admin.php:112
+#: ../admin.php:159
 msgid "FTP Directory:"
 msgstr "FTP 目錄："
 
-#: ../admin.php:119
+#: ../admin.php:165
+msgid "HTML link url:"
+msgstr "HTML 網址連結："
+
+#: ../admin.php:172
 msgid "Save & Test Changes"
 msgstr "儲存 & 測試 變更"
 
-#: ../admin.php:125
+#: ../admin.php:178
 msgid "Basic Options"
 msgstr "基本設定"
 
-#: ../admin.php:128
+#: ../admin.php:181
 msgid "Rename file:"
 msgstr "檔案重新命名："
 
-#: ../admin.php:131
+#: ../admin.php:184
 msgid "disable"
 msgstr "停用"
 
-#: ../admin.php:132
+#: ../admin.php:185
 msgid "enable"
 msgstr "啟用"
 
-#: ../admin.php:135
+#: ../admin.php:188
 msgid "Proposal enabled! Because the file name to avoid some of the resulting error can not be expected"
 msgstr "建議啟用！以避免一些因為檔名而產生的不可預期的錯誤"
 
-#: ../admin.php:140
+#: ../admin.php:193
 msgid "Save Changes"
 msgstr "儲存變更"
 

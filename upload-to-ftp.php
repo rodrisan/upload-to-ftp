@@ -3,10 +3,12 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.0.1
+Version: 0.0.2
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
+
+set_time_limit(600);
 
 if( is_admin() ) {
 	$currentLocale = get_locale();
@@ -18,10 +20,11 @@ if( is_admin() ) {
 			load_textdomain('upload-to-ftp', $moFile);
 		}
 	}
-	include(dirname( __FILE__ ) . '/admin.php');
+	include(dirname(__FILE__) . '/admin.php');
 }
 
-add_action('activate_upload-to-ftp/upload-to-ftp.php', 'upload_to_ftp_init');
+$action_file = plugin_basename(__FILE__);
+add_action('activate_' . $action_file, 'upload_to_ftp_init');
 function upload_to_ftp_init() {
 	$u2ftp_options = array();
 	$u2ftp_options['ftp_host'] = '';
@@ -49,10 +52,9 @@ class Upload_to_FTP {
 			add_filter('sanitize_file_name', array(&$this, 'file_rename'));
 		}
 		add_action('add_attachment', array(&$this, 'add_main_file'));
-		add_filter('wp_generate_attachment_metadata', array(&$this, 'add_thumbnail'), 10, 2);
-//		add_filter('attachment_fields_to_save',  array(&$this, 'do_upload'), 10, 2);
-		add_filter('wp_get_attachment_image_attributes', array(&$this, 'resrc_file'), 10, 2);
-		add_filter('wp_get_attachment_url', array(&$this, 'reurl_file'), 10, 2);
+		add_filter('wp_generate_attachment_metadata', array(&$this, 'add_thumbnail'));
+		add_filter('wp_get_attachment_image_attributes', array(&$this, 'resrc_file'));
+		add_filter('wp_get_attachment_url', array(&$this, 'reurl_file'));
 	}
 
 	function add_main_file($att_id) {
@@ -90,7 +92,6 @@ class Upload_to_FTP {
 
 	function do_upload($metadata = '') {
 		echo('do_upload<br />');
-		set_time_limit(600);
 		$ftpc = @ftp_connect($this->options['ftp_host'], $this->options['ftp_port'], 30);
 		if( @ftp_login($ftpc , $this->options['ftp_username'], $this->options['ftp_password']) ) {
 			ftp_pasv($ftpc, true);
@@ -106,13 +107,13 @@ class Upload_to_FTP {
 			foreach( $this->files['upload'] as $file_name ) {
 				ftp_put($ftpc, $now_dir . $file_name, $this->files['dir']['path'] . '/' . $file_name, FTP_BINARY);
 			}
-			add_post_meta($this->files['att_id'], 'file_to_ftp', 1, true);
+			add_post_meta($this->files['att_id'], 'file_to_ftp', time(), true);
 		}
 		return $metadata;
 	}
 
 	function resrc_file($attr) {
-			global $wpdb;
+		global $wpdb;
 		$file_name = substr($attr['src'], strlen($this->files['dir']['url']) + 1);
 		$att_id = $wpdb->get_var('SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key="_wp_attachment_metadata" AND meta_value LIKE "%' . $file_name . '%" LIMIT 1');
 		$is_upload = get_post_meta($att_id, 'file_to_ftp', true);
