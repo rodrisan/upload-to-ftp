@@ -9,6 +9,29 @@ function upload_to_ftp_links($links, $file)
 	return $links;
 }
 
+add_filter('manage_media_columns', 'upload_to_ftp_add_columns');
+function upload_to_ftp_add_columns($attr) {
+	$attr['toftp'] = __('to FTP', 'upload-to-ftp');
+	return $attr;
+}
+
+add_action('manage_media_custom_column', 'upload_to_ftp_display_column', 10, 2);
+function upload_to_ftp_display_column($name, $id) {
+	global $post;
+	if( $name == 'toftp' ) {
+		$date = get_post_meta($id, 'file_to_ftp', true);
+		if( $date == 1 ) {
+			$date = strtotime($post->post_date);
+			update_post_meta($id, 'file_to_ftp', $date);
+		}
+		if( $date ) {
+			echo(date('Y/m/d G:i', $date));
+		} else {
+			_e('un-upload', 'upload-to-ftp');
+		}
+	}
+}
+
 add_action('admin_menu', 'upload_to_ftp_admin');
 function upload_to_ftp_admin()
 {
@@ -33,12 +56,18 @@ if( !defined('FTP_BINARY') ) {
 }
 
 if( !empty($_POST['Update_FTP']) ) {
-	$ftp_test_ok = false;
 	$ftp_host = trim($_POST['u2ftp_ftp_host']);
 	$ftp_username = trim($_POST['u2ftp_ftp_username']);
 	$ftp_password = trim($_POST['u2ftp_ftp_password']);
 	$ftp_port = intval($_POST['u2ftp_ftp_port']);
 	$ftp_dir = trim($_POST['u2ftp_ftp_dir']);
+	$ftp_dir = str_replace('\\', '/', $ftp_dir);
+	if( substr($ftp_dir, 0, 1) != '/' ) {
+		$ftp_dir = '/' . $ftp_dir;
+	}
+	if( substr($ftp_dir, -1) != '/' ) {
+		$ftp_dir .= '/';
+	}
 
 	$ftpc = @ftp_connect($ftp_host, $ftp_port, 30);
 	if( !$ftpc ) {
@@ -60,13 +89,27 @@ if( !empty($_POST['Update_FTP']) ) {
 					$error = '<span style="color:rad">' . __('FTP is not writable', 'upload-to-ftp') . ' <strong>' . $ftp_dir . '</strong></span>';
 				} else {
 					ftp_delete($ftpc, $ftp_dir . '/test-file.txt') ;
-					$ftp_test_ok = true;
 				}
 			}
 		}
 		ftp_close($ftpc);  
 	}
 	$u2ftp_options['html_link_url'] = trim($_POST['u2ftp_html_link_url']);
+	preg_match('/http[s]?:\/\//i', $u2ftp_options['html_link_url'], $temp);
+	if( !isset($temp[0]) )
+	{
+		$u2ftp_options['html_link_url'] = 'http://' . $u2ftp_options['html_link_url'];
+	}
+	if( substr($u2ftp_options['html_link_url'], -1) != '/' ) {
+		$u2ftp_options['html_link_url'] .= '/';
+	}
+	if( isset($error) ) {
+		$u2ftp_options['ftp_host'] = '';
+		$u2ftp_options['ftp_port'] = 21;
+		$u2ftp_options['ftp_username'] = '';
+		$u2ftp_options['ftp_password'] = '';
+		$u2ftp_options['ftp_dir'] = '/public_html/';
+	}
 	if( update_option('U2FTP_options', $u2ftp_options) ) {
 		$text = '<span style="color:green">' . __('Updated FTP Options Success', 'upload-to-ftp') . '</span>';
 	}
