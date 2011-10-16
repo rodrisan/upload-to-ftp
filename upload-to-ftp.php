@@ -3,7 +3,7 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.0.2
+Version: 0.0.3
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
@@ -58,14 +58,12 @@ class Upload_to_FTP {
 	}
 
 	function add_main_file($att_id) {
-		echo('add_main_file<br />');
 		$att_file = pathinfo(get_attached_file($att_id));
 		$this->files['att_id'] = $att_id;
 		$this->files['upload'][] = $att_file['basename'];
 	}
 
 	function add_thumbnail($att_file) {
-		echo('add_thumbnail<br />');
 		if( isset($att_file['sizes']['thumbnail']['file']) ) {
 			$this->files['upload'][] = $att_file['sizes']['thumbnail']['file'];
 		}
@@ -80,7 +78,6 @@ class Upload_to_FTP {
 	}
 
 	function file_rename($file_name) {
-		echo('file_rename<br />');
 		$parts = explode('.', $file_name);
 		if( count($parts) < 2 ) {
 			return md5($file_name);
@@ -91,7 +88,6 @@ class Upload_to_FTP {
 	}
 
 	function do_upload($metadata = '') {
-		echo('do_upload<br />');
 		$ftpc = @ftp_connect($this->options['ftp_host'], $this->options['ftp_port'], 30);
 		if( @ftp_login($ftpc , $this->options['ftp_username'], $this->options['ftp_password']) ) {
 			ftp_pasv($ftpc, true);
@@ -118,7 +114,7 @@ class Upload_to_FTP {
 		$att_id = $wpdb->get_var('SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key="_wp_attachment_metadata" AND meta_value LIKE "%' . $file_name . '%" LIMIT 1');
 		$is_upload = get_post_meta($att_id, 'file_to_ftp', true);
 		if( $is_upload ) {
-			$attr['src'] = $this->options['html_link_url'] . $file_name;
+			$attr['src'] = substr($this->options['html_link_url'], 0, -1) . $this->files['dir']['subdir'] . '/' . $file_name;
 		}
 		return $attr;
 	}
@@ -129,7 +125,7 @@ class Upload_to_FTP {
 		$att_id = $wpdb->get_var('SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE (meta_key="_wp_attachment_metadata" OR meta_key="_wp_attached_file") AND meta_value LIKE "%' . $file_name . '%" LIMIT 1');
 		$is_upload = get_post_meta($att_id, 'file_to_ftp', true);
 		if( $is_upload ) {
-			$url = $this->options['html_link_url'] . $file_name;
+			$url = substr($this->options['html_link_url'], 0, -1) . $this->files['dir']['subdir'] . '/' .  $file_name;
 		}
 		return $url;
 	}
