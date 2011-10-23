@@ -3,7 +3,7 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.0.3
+Version: 0.0.4
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
@@ -12,19 +12,16 @@ set_time_limit(600);
 
 if( is_admin() ) {
 	$currentLocale = get_locale();
-	if( !empty($currentLocale) )
-	{
+	if( !empty($currentLocale) ) {
 		$moFile = dirname(__FILE__) . '/lang/' . $currentLocale . '.mo';
-		if( @file_exists($moFile) && is_readable($moFile) )
-		{
+		if( @file_exists($moFile) && is_readable($moFile) ) {
 			load_textdomain('upload-to-ftp', $moFile);
 		}
 	}
 	include(dirname(__FILE__) . '/admin.php');
 }
 
-$action_file = plugin_basename(__FILE__);
-add_action('activate_' . $action_file, 'upload_to_ftp_init');
+register_activation_hook(__FILE__, 'upload_to_ftp_init');
 function upload_to_ftp_init() {
 	$u2ftp_options = array();
 	$u2ftp_options['ftp_host'] = '';
@@ -33,7 +30,9 @@ function upload_to_ftp_init() {
 	$u2ftp_options['ftp_port'] = 21;
 	$u2ftp_options['ftp_dir'] = '/public_html/';
 	$u2ftp_options['html_link_url'] = 'http://';
-	$u2ftp_options['rename_file'] = 1;
+	$u2ftp_options['rename_file'] = true;
+	$u2ftp_options['ftp_mode'] = true;
+	$u2ftp_options['ftp_ok'] = false;
 	add_option('U2FTP_options', $u2ftp_options, 'Upload to FTP Options');
 }
 
@@ -47,8 +46,13 @@ class Upload_to_FTP {
 			'dir' => wp_upload_dir()
 		);
 		$this->options = get_option('U2FTP_options', array());
+		if( !isset($this->options['ftp_ok']) ) {
+			$this->options['ftp_ok'] = false;
+			$this->options['ftp_mode'] = true;
+			update_option('U2FTP_options', $this->options);
+		}
 
-		if( $this->options['rename_file'] == 1 ) {
+		if( $this->options['rename_file'] ) {
 			add_filter('sanitize_file_name', array(&$this, 'file_rename'));
 		}
 		add_action('add_attachment', array(&$this, 'add_main_file'));
@@ -73,7 +77,9 @@ class Upload_to_FTP {
 		if( isset($att_file['sizes']['large']['file']) ) {
 			$this->files['upload'][] = $att_file['sizes']['large']['file'];
 		}
-		$this->do_upload();
+		if( $this->options['ftp_ok'] ) {
+			$this->do_upload();
+		}
 		return $att_file;
 	}
 
@@ -90,7 +96,7 @@ class Upload_to_FTP {
 	function do_upload($metadata = '') {
 		$ftpc = @ftp_connect($this->options['ftp_host'], $this->options['ftp_port'], 30);
 		if( @ftp_login($ftpc , $this->options['ftp_username'], $this->options['ftp_password']) ) {
-			ftp_pasv($ftpc, true);
+			ftp_pasv($ftpc, $this->options['ftp_mode']);
 			$subdir = explode('/', $this->files['dir']['subdir']);
 			$now_dir = $this->options['ftp_dir'];
 			$len = count($subdir);
