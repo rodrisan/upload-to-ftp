@@ -57,7 +57,7 @@ if( !empty($_POST['Update_FTP']) ) {
 	$ftp_username = trim($_POST['u2ftp_ftp_username']);
 	$ftp_password = trim($_POST['u2ftp_ftp_password']);
 	$ftp_port = intval($_POST['u2ftp_ftp_port']);
-	$ftp_mode = (intval($_POST['u2ftp_ftp_mode']) == 1) ? true : false;
+	$ftp_mode = (intval($_POST['u2ftp_ftp_mode']) == 1) ? 1 : 0;
 	$ftp_test_ok = false;
 
 	preg_match('/ftp[s]?:\/\//i', $ftp_host , $temp);
@@ -77,9 +77,8 @@ if( !empty($_POST['Update_FTP']) ) {
 		if( @!ftp_login($ftpc , $ftp_username, $ftp_password) ) {
 			$error = '<span style="color:rad">' . __('FTP login error with username', 'upload-to-ftp') . ' <strong>' . $ftp_username . '</strong></span>';
 		} else {
-			ftp_pasv($ftpc, $ftp_mode);
+			ftp_pasv($ftpc, (bool) $ftp_mode);
 			$ftp_dir = trim($_POST['u2ftp_ftp_dir']);
-			$ftp_dir = str_replace('\\', '/', $ftp_dir);
 			if( substr($ftp_dir, 0, 1) != '/' ) {
 				$ftp_dir = '/' . $ftp_dir;
 			}
@@ -89,7 +88,7 @@ if( !empty($_POST['Update_FTP']) ) {
 			if( @!ftp_chdir($ftpc, $ftp_dir) ) {
 				$error = '<span style="color:rad">' . __('FTP open directory failure', 'upload-to-ftp') . ' <strong>' . $ftp_dir . '</strong></span>';
 			} else {
-				if( @!ftp_put($ftpc, $ftp_dir . '/test-file.txt', dirname(__FILE__) . '/test-file.txt', FTP_BINARY) ) {
+				if( @!ftp_put($ftpc, $ftp_dir . 'test-file.txt', dirname(__FILE__) . '/test-file.txt', FTP_BINARY) ) {
 					$error = '<span style="color:rad">' . __('FTP is not writable', 'upload-to-ftp') . ' <strong>' . $ftp_dir . '</strong></span>';
 					$error .= '<br />Try to upload [ ' . dirname(__FILE__) . '/test-file.txt ] to [ ' . $ftp_dir . '/test-file.txt ]';
 				} else {
@@ -102,11 +101,28 @@ if( !empty($_POST['Update_FTP']) ) {
 					if( substr($html_link_url , -1) != '/' ) {
 						$html_link_url .= '/';
 					}
-					$test = @file($html_link_url . '/test-file.txt');
-					if( !is_array($test) || count($test) != 1 || $test[0] != 'This is a test file for "Upload to FTP"' ) {
+
+					$body = '';
+					if( function_exists('curl_init') ) {
+						$ch = curl_init();
+						curl_setopt($ch, CURLOPT_URL, $html_link_url . 'test-file.txt');
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+						curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+						curl_setopt($ch, CURLOPT_COOKIE, '');
+						curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+						$body = curl_exec($ch);
+						$info = curl_getinfo($ch);
+						curl_close($ch);
+					} else {
+						$test = @file($html_link_url . 'test-file.txt');
+						if( is_array($test) ) {
+							$body = implode('', $test);
+						}
+					}
+					if( $body != 'This is a test file for "Upload to FTP"' ) {
 						$error = '<span style="color:rad">' . __('HTML link url don\'t match FTP dir', 'upload-to-ftp') . '</span>';
 					}
-					ftp_delete($ftpc, $ftp_dir . '/test-file.txt') ;
+					ftp_delete($ftpc, $ftp_dir . 'test-file.txt') ;
 				}
 			}
 		}
