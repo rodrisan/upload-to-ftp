@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Upload to FTP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-15 17:13+0800\n"
-"PO-Revision-Date: 2011-10-15 17:13+0800\n"
+"POT-Creation-Date: 2011-10-18 17:50+0800\n"
+"PO-Revision-Date: 2011-10-18 17:52+0800\n"
 "Last-Translator: Richer Yang <fantasyworldidvtw@gmail.com>\n"
 "Language-Team:  <fantasyworldidvtw@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -39,83 +39,99 @@ msgstr "Upload to FTP 設定"
 msgid "Your server does not support FTP-related functions"
 msgstr "你的伺服器不支援 FTP 相關函式"
 
-#: ../admin.php:74
+#: ../admin.php:68
 msgid "FTP connect error"
 msgstr "FTP 連結失敗"
 
-#: ../admin.php:79
+#: ../admin.php:71
 msgid "FTP login error with username"
 msgstr "FTP 登入失敗 使用者帳號："
 
-#: ../admin.php:85
+#: ../admin.php:83
 msgid "FTP open directory failure"
 msgstr "FTP 開啟指定目錄失敗"
 
-#: ../admin.php:89
+#: ../admin.php:86
 msgid "FTP is not writable"
 msgstr "FTP 是不可寫入的"
 
-#: ../admin.php:114
+#: ../admin.php:99
+msgid "HTML link url don't match FTP dir"
+msgstr "HTML 網址連結 與 FTP 目錄 不相吻合"
+
+#: ../admin.php:130
 msgid "Updated FTP Options Success"
 msgstr "成功的更新FTP設定"
 
-#: ../admin.php:122
+#: ../admin.php:138
 msgid "Updated Basic Options Success"
 msgstr "成功的基本更新設定"
 
-#: ../admin.php:132
+#: ../admin.php:148
 msgid "FTP Options"
 msgstr "FTP 設定"
 
-#: ../admin.php:135
+#: ../admin.php:151
 msgid "FTP Host:"
 msgstr "FTP 主機："
 
-#: ../admin.php:141
+#: ../admin.php:157
 msgid "FTP Username:"
 msgstr "FTP 使用者名稱："
 
-#: ../admin.php:147
+#: ../admin.php:163
 msgid "FTP Password:"
 msgstr "FTP 密碼："
 
-#: ../admin.php:153
+#: ../admin.php:169
 msgid "FTP Port:"
 msgstr "FTP 連接埠："
 
-#: ../admin.php:159
+#: ../admin.php:175
+msgid "FTP Mode:"
+msgstr "FTP 模式："
+
+#: ../admin.php:177
+msgid "Active"
+msgstr "主動"
+
+#: ../admin.php:178
+msgid "Passive"
+msgstr "被動"
+
+#: ../admin.php:182
 msgid "FTP Directory:"
 msgstr "FTP 目錄："
 
-#: ../admin.php:165
+#: ../admin.php:188
 msgid "HTML link url:"
 msgstr "HTML 網址連結："
 
-#: ../admin.php:172
+#: ../admin.php:195
 msgid "Save & Test Changes"
 msgstr "儲存 & 測試 變更"
 
-#: ../admin.php:178
+#: ../admin.php:201
 msgid "Basic Options"
 msgstr "基本設定"
 
-#: ../admin.php:181
+#: ../admin.php:204
 msgid "Rename file:"
 msgstr "檔案重新命名："
 
-#: ../admin.php:184
+#: ../admin.php:207
 msgid "disable"
 msgstr "停用"
 
-#: ../admin.php:185
+#: ../admin.php:208
 msgid "enable"
 msgstr "啟用"
 
-#: ../admin.php:188
+#: ../admin.php:211
 msgid "Proposal enabled! Because the file name to avoid some of the resulting error can not be expected"
 msgstr "建議啟用！以避免一些因為檔名而產生的不可預期的錯誤"
 
-#: ../admin.php:193
+#: ../admin.php:216
 msgid "Save Changes"
 msgstr "儲存變更"
 
