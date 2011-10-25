@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Upload to FTP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-18 17:50+0800\n"
-"PO-Revision-Date: 2011-10-18 17:52+0800\n"
+"POT-Creation-Date: 2011-10-25 13:23+0800\n"
+"PO-Revision-Date: 2011-10-25 13:23+0800\n"
 "Last-Translator: Richer Yang <fantasyworldidvtw@gmail.com>\n"
 "Language-Team:  <fantasyworldidvtw@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -15,125 +15,162 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-SearchPath-0: ./..\n"
 
-#: ../admin.php:7
+#: ../admin.php:5
 msgid "Settings"
 msgstr "設定"
 
-#: ../admin.php:14
+#: ../admin.php:12
 msgid "to FTP"
 msgstr "上傳到 FTP"
 
-#: ../admin.php:30
+#: ../admin.php:28
 msgid "un-upload"
 msgstr "未上傳"
 
-#: ../admin.php:38
+#: ../admin.php:35
 msgid "Upload to FTP"
 msgstr "Upload to FTP"
 
-#: ../admin.php:45
+#: ../admin.php:42
 msgid "Upload to FTP Options"
 msgstr "Upload to FTP 設定"
 
-#: ../admin.php:51
+#: ../admin.php:48
 msgid "Your server does not support FTP-related functions"
 msgstr "你的伺服器不支援 FTP 相關函式"
 
-#: ../admin.php:68
+#: ../admin.php:96
 msgid "FTP connect error"
 msgstr "FTP 連結失敗"
 
-#: ../admin.php:71
+#: ../admin.php:102
 msgid "FTP login error with username"
 msgstr "FTP 登入失敗 使用者帳號："
 
-#: ../admin.php:83
+#: ../admin.php:108
 msgid "FTP open directory failure"
 msgstr "FTP 開啟指定目錄失敗"
 
-#: ../admin.php:86
+#: ../admin.php:111
 msgid "FTP is not writable"
 msgstr "FTP 是不可寫入的"
 
-#: ../admin.php:99
+#: ../admin.php:129
 msgid "HTML link url don't match FTP dir"
 msgstr "HTML 網址連結 與 FTP 目錄 不相吻合"
 
-#: ../admin.php:130
+#: ../admin.php:150
 msgid "Updated FTP Options Success"
 msgstr "成功的更新FTP設定"
 
-#: ../admin.php:138
+#: ../admin.php:158
 msgid "Updated Basic Options Success"
 msgstr "成功的基本更新設定"
 
-#: ../admin.php:148
+#: ../admin.php:168
 msgid "FTP Options"
 msgstr "FTP 設定"
 
-#: ../admin.php:151
+#: ../admin.php:171
+msgid "FTP Status:"
+msgstr "FTP 狀態："
+
+#: ../admin.php:173
+msgid "Upload Status:"
+msgstr "上傳狀態："
+
+#: ../admin.php:173
+msgid "Can upload"
+msgstr "可以上傳"
+
+#: ../admin.php:173
+msgid "Can not upload"
+msgstr "不能上傳"
+
+#: ../admin.php:174
+msgid "Delete Status:"
+msgstr "刪除狀態："
+
+#: ../admin.php:174
+msgid "Can delete"
+msgstr "可以刪除"
+
+#: ../admin.php:174
+msgid "Can not delete"
+msgstr "不能刪除"
+
+#: ../admin.php:178
 msgid "FTP Host:"
 msgstr "FTP 主機："
 
-#: ../admin.php:157
-msgid "FTP Username:"
-msgstr "FTP 使用者名稱："
-
-#: ../admin.php:163
-msgid "FTP Password:"
-msgstr "FTP 密碼："
-
-#: ../admin.php:169
+#: ../admin.php:184
 msgid "FTP Port:"
 msgstr "FTP 連接埠："
 
-#: ../admin.php:175
+#: ../admin.php:190
+msgid "FTP Timeout:"
+msgstr "FTP 逾時："
+
+#: ../admin.php:196
+msgid "FTP Username:"
+msgstr "FTP 使用者名稱："
+
+#: ../admin.php:202
+msgid "FTP Password:"
+msgstr "FTP 密碼："
+
+#: ../admin.php:208
 msgid "FTP Mode:"
 msgstr "FTP 模式："
 
-#: ../admin.php:177
+#: ../admin.php:210
 msgid "Active"
 msgstr "主動"
 
-#: ../admin.php:178
+#: ../admin.php:211
 msgid "Passive"
 msgstr "被動"
 
-#: ../admin.php:182
+#: ../admin.php:215
 msgid "FTP Directory:"
 msgstr "FTP 目錄："
 
-#: ../admin.php:188
+#: ../admin.php:221
 msgid "HTML link url:"
 msgstr "HTML 網址連結："
 
-#: ../admin.php:195
+#: ../admin.php:228
 msgid "Save & Test Changes"
 msgstr "儲存 & 測試 變更"
 
-#: ../admin.php:201
+#: ../admin.php:234
 msgid "Basic Options"
 msgstr "基本設定"
 
-#: ../admin.php:204
+#: ../admin.php:237
 msgid "Rename file:"
 msgstr "檔案重新命名："
 
-#: ../admin.php:207
+#: ../admin.php:240
 msgid "disable"
 msgstr "停用"
 
-#: ../admin.php:208
+#: ../admin.php:241
 msgid "enable"
 msgstr "啟用"
 
-#: ../admin.php:211
+#: ../admin.php:244
 msgid "Proposal enabled! Because the file name to avoid some of the resulting error can not be expected"
 msgstr "建議啟用！以避免一些因為檔名而產生的不可預期的錯誤"
 
-#: ../admin.php:216
+#: ../admin.php:249
 msgid "Save Changes"
 msgstr "儲存變更"
+
+#: ../upload-to-ftp.php:72
+#, php-format
+msgid "Please go to <a href=\"%s\">Upload to ftp setting page</a> update you options."
+msgstr "請前往 <a href=\"%s\">Upload to FTP 設定頁面</a> 設定FTP資料"
 
 #~ msgid "not rename"
 #~ msgstr "不要 重新命名"
