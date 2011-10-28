@@ -3,7 +3,7 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.0.5
+Version: 0.0.5.1
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
