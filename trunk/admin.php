@@ -109,11 +109,12 @@ if( !empty($_POST['Update_FTP']) ) {
 			} else {
 				if( @!ftp_put($ftpc, $ftp_dir . 'test-file.txt', dirname(__FILE__) . '/test-file.txt', FTP_BINARY) ) {
 					$error = '<span style="color:rad">' . __('FTP is not writable', 'upload-to-ftp') . ' <strong>' . $ftp_dir . '</strong></span>';
+					$error .= '<br />' . $ftp_dir . 'test-file.txt => ' . dirname(__FILE__) . '/test-file.txt';
 				} else {
 					$ftp_uplode_ok = true;
 					$body = '';
 					if( ini_get('allow_url_fopen') ) {
-						$body = file_get_contents($html_link_url . 'test-file.txt');
+						$body = @file_get_contents($html_link_url . 'test-file.txt');
 					} elseif ( function_exists('curl_init') ) {
 						$ch = curl_init();
 						curl_setopt($ch, CURLOPT_URL, $html_link_url . 'test-file.txt');
@@ -121,12 +122,13 @@ if( !empty($_POST['Update_FTP']) ) {
 						curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 						curl_setopt($ch, CURLOPT_COOKIE, '');
 						curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-						$body = curl_exec($ch);
-						$info = curl_getinfo($ch);
-						curl_close($ch);
+						$body = @curl_exec($ch);
+						$info = @curl_getinfo($ch);
+						@curl_close($ch);
 					}
 					if( $body != 'This is a test file for "Upload to FTP"' ) {
 						$error = '<span style="color:rad">' . __('HTML link url don\'t match FTP dir', 'upload-to-ftp') . '</span>';
+						$error .= '<br />' . $html_link_url . 'test-file.txt';
 					}
 					if( @ftp_delete($ftpc, $ftp_dir . 'test-file.txt') ) {
 						$ftp_delete_ok = true;
