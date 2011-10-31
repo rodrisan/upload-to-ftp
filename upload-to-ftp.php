@@ -3,7 +3,7 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.0.5.1
+Version: 0.0.6
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
@@ -66,6 +66,29 @@ class Upload_to_FTP {
 
 		add_filter('wp_get_attachment_image_attributes', array(&$this, 'resrc_file'), 10, 2);
 		add_filter('wp_get_attachment_url', array(&$this, 'reurl_file'), 10, 2);
+
+		$version = get_option('U2FTP_version', '0.0.5.1');
+		if( version_compare($version, '0.0.6', '<') ) {
+			global $wpdb;
+			$postmetas = $wpdb->get_results('SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key LIKE "file_to_ftp"');
+			if( $postmetas ) {
+				foreach( $postmetas as $postmeta ) {
+					$meta_date = get_post_meta($postmeta->post_id, 'file_to_ftp', true);
+					if( !is_array($meta_date) ) {
+						$dir = wp_upload_dir(get_the_time('Y-m-d H:i:s', $postmeta->post_id));
+						$metadate = array('up_time' => $meta_date, 'up_dir' => $dir['subdir']);
+						if( substr($metadate['up_dir'], 0, 1) == '/' ) {
+							$metadate['up_dir'] = substr($metadate['up_dir'], 1);
+						}
+						if( substr($ftp_dir, -1) == '/' ) {
+							$metadate['up_dir'] = substr($metadate['up_dir'], 0, -1);
+						}
+						update_post_meta($postmeta->post_id, 'file_to_ftp', $metadate);
+					}
+				}
+			}
+			update_option('U2FTP_version', '0.0.6');
+		}
 	}
 
 	function show_notices() {
@@ -98,7 +121,7 @@ class Upload_to_FTP {
 		if( isset($att_file['sizes']['large']['file']) ) {
 			$this->upload[] = $att_file['sizes']['large']['file'];
 		}
-		if( $this->options['ftp_ok'] ) {
+		if( $this->options['ftp_uplode_ok'] ) {
 			$this->do_upload();
 		}
 		return $att_file;
@@ -106,40 +129,50 @@ class Upload_to_FTP {
 
 	function do_upload() {
 		if( $this->options['ftp_uplode_ok'] && $this->open_ftp() ) {
-			$dir = wp_upload_dir(get_the_time('Y-m-d H:i:s', $this->upload['att_id']));
+			$parent_id = wp_get_post_parent_id($this->upload['att_id']);
+			if( $parent_id ) {
+				$dir = wp_upload_dir(get_the_time('Y-m-d H:i:s', $parent_id));
+			} else {
+				$dir = wp_upload_dir(get_the_time('Y-m-d H:i:s', $this->upload['att_id']));
+			}
 			$subdir = explode('/', $dir['subdir']);
 			$now_dir = $this->options['ftp_dir'];
 			$len = count($subdir);
 			for( $i = 1; $i < $len; $i++ ) {
 				$now_dir .= $subdir[$i] . '/';
-				if( @!ftp_chdir($this->ftpc, $now_dir) ) {
+				if( !@ftp_chdir($this->ftpc, $now_dir) ) {
 					@ftp_mkdir($this->ftpc, $now_dir);
 				}
 			}
 			for( $i = 0; isset($this->upload[$i]); $i++ ) {
 				@ftp_put($this->ftpc, $now_dir . $this->upload[$i], $dir['path'] . '/' . $this->upload[$i], FTP_BINARY);
 			}
-			add_post_meta($this->upload['att_id'], 'file_to_ftp', time(), true);
+			$metadate = array('up_time' => time(), 'up_dir' => $dir['subdir']);
+			if( substr($metadate['up_dir'], 0, 1) == '/' ) {
+				$metadate['up_dir'] = substr($metadate['up_dir'], 1);
+			}
+			if( substr($ftp_dir, -1) == '/' ) {
+				$metadate['up_dir'] = substr($metadate['up_dir'], 0, -1);
+			}
+			add_post_meta($this->upload['att_id'], 'file_to_ftp', $metadate, true);
 			$this->close_ftp();
 		}
 	}
 
 	function resrc_file($attr, $att) {
 		$file_name = basename($attr['src']);
-		$is_upload = get_post_meta($att->ID, 'file_to_ftp', true);
-		if( $is_upload ) {
-			$dir = wp_upload_dir(get_the_time('Y-m-d H:i:s', $att->ID));
-			$attr['src'] = substr($this->options['html_link_url'], 0, -1) . $dir['subdir'] . '/' . $file_name;
+		$meta_date = get_post_meta($att->ID, 'file_to_ftp', true);
+		if( $meta_date['up_time'] ) {
+			$attr['src'] = $this->options['html_link_url'] . $meta_date['up_dir'] . '/' . $file_name;
 		}
 		return $attr;
 	}
 
 	function reurl_file($url, $att_id) {
 		$file_name = basename($url);
-		$is_upload = get_post_meta($att_id, 'file_to_ftp', true);
-		if( $is_upload ) {
-			$dir = wp_upload_dir(get_the_time('Y-m-d H:i:s', $att_id));
-			$url = substr($this->options['html_link_url'], 0, -1) . $dir['subdir'] . '/' .  $file_name;
+		$meta_date = get_post_meta($att_id, 'file_to_ftp', true);
+		if( $meta_date['up_time'] ) {
+			$url = $this->options['html_link_url'] . $meta_date['up_dir'] . '/' .  $file_name;
 		}
 		return $url;
 	}
@@ -161,9 +194,9 @@ class Upload_to_FTP {
 	function do_delete_file() {
 		if( isset($this->delete[0]) ) {
 			if( $this->options['ftp_delete_ok'] && $this->open_ftp() ) {
-				$dir = wp_upload_dir(get_the_time('Y-m-d H:i:s', $this->delete['att_id']));
+				$meta_date = get_post_meta($att_id, 'file_to_ftp', true);
 				for( $i = 0; isset($this->delete[$i]); $i++ ) {
-					@ftp_delete($this->ftpc, substr($this->options['ftp_dir'], 0, -1) . $dir['subdir'] . '/' . $this->delete[$i]);
+					@ftp_delete($this->ftpc, substr($this->options['ftp_dir'], 0, -1) . $meta_date['subdir'] . '/' . $this->delete[$i]);
 				}
 				$this->close_ftp();
 			}
@@ -177,7 +210,7 @@ class Upload_to_FTP {
 				ftp_pasv($this->ftpc, (bool) $this->options['ftp_mode']);
 				return true;
 			} else {
-				ftp_close($this->ftpc);
+				@ftp_close($this->ftpc);
 				$this->ftpc = false;
 			}
 		}
@@ -186,7 +219,7 @@ class Upload_to_FTP {
 
 	function close_ftp() {
 		if( $this->ftpc ) {
-			ftp_close($this->ftpc);
+			@ftp_close($this->ftpc);
 			$this->ftpc = false;
 		}
 	}

@@ -17,13 +17,13 @@ add_action('manage_media_custom_column', 'upload_to_ftp_display_column', 10, 2);
 function upload_to_ftp_display_column($name, $id) {
 	global $post;
 	if( $name == 'toftp' ) {
-		$date = get_post_meta($id, 'file_to_ftp', true);
-		if( $date == 1 ) {
-			$date = strtotime($post->post_date);
-			update_post_meta($id, 'file_to_ftp', $date);
+		$metadate = get_post_meta($id, 'file_to_ftp', true);
+		if( $metadate['up_time'] == 1 ) {
+			$metadate['up_time'] = strtotime($post->post_date);
+			update_post_meta($id, 'file_to_ftp', $metadate);
 		}
-		if( $date ) {
-			echo(date('Y/m/d G:i', $date));
+		if( $metadate['up_time'] ) {
+			echo(date('Y/m/d G:i', $metadate['up_time']));
 		} else {
 			_e('un-upload', 'upload-to-ftp');
 		}
