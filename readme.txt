@@ -1,9 +1,9 @@
 === Upload to FTP ===
 Contributors: Richer Yang
 Tags: upload, ftp, attachment
-Requires at least: 3.0.0
+Requires at least: 3.2.0
 Tested up to: 3.2.1
-Stable tag: 0.0.6
+Stable tag: 0.0.7
 
 let you can upload file to and download host .
 

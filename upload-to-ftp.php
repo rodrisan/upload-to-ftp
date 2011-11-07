@@ -3,7 +3,7 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.0.6
+Version: 0.0.7
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
@@ -121,6 +121,15 @@ class Upload_to_FTP {
 		if( isset($att_file['sizes']['large']['file']) ) {
 			$this->upload[] = $att_file['sizes']['large']['file'];
 		}
+		if( isset($att_file['sizes']['post-thumbnail']['file']) ) {
+			$this->upload[] = $att_file['sizes']['post-thumbnail']['file'];
+		}
+		if( isset($att_file['sizes']['large-feature']['file']) ) {
+			$this->upload[] = $att_file['sizes']['large-feature']['file'];
+		}
+		if( isset($att_file['sizes']['small-feature']['file']) ) {
+			$this->upload[] = $att_file['sizes']['small-feature']['file'];
+		}
 		if( $this->options['ftp_uplode_ok'] ) {
 			$this->do_upload();
 		}
@@ -179,14 +188,20 @@ class Upload_to_FTP {
 
 	function delete_file_name($att_id) {
 		$file_name = get_post_meta($att_id, '_wp_attached_file', true);
-		$this->delete['att_id'] = $att_id;
+		$meta_date = get_post_meta($att_id, 'file_to_ftp', true);
+		$this->delete['up_dir'] = $meta_date['up_dir'];
 		$this->delete['basename'] = basename($file_name);
+		$this->delete['basename'] = substr($this->delete['basename'], 0, strpos($this->delete['basename'], '.'));
+		$this->delete['basename_len'] = strlen($this->delete['basename']);
 	}
 
 	function add_delete_file($file) {
 		$file_name = basename($file);
-		if( $file_name == $this->delete['basename'] ) {
-			$this->delete[] = $file_name;
+		if( substr($file_name, 0, $this->delete['basename_len']) == $this->delete['basename'] ) {
+			$next_word = substr($file_name, $this->delete['basename_len'], 1);
+			if( $next_word == '-' || $next_word == '.' ) {
+				$this->delete[] = $file_name;
+			}
 		}
 		return $file;
 	}
@@ -194,9 +209,8 @@ class Upload_to_FTP {
 	function do_delete_file() {
 		if( isset($this->delete[0]) ) {
 			if( $this->options['ftp_delete_ok'] && $this->open_ftp() ) {
-				$meta_date = get_post_meta($att_id, 'file_to_ftp', true);
 				for( $i = 0; isset($this->delete[$i]); $i++ ) {
-					@ftp_delete($this->ftpc, substr($this->options['ftp_dir'], 0, -1) . $meta_date['subdir'] . '/' . $this->delete[$i]);
+					@ftp_delete($this->ftpc, $this->options['ftp_dir'] . $this->delete['up_dir'] . '/' . $this->delete[$i]);
 				}
 				$this->close_ftp();
 			}
