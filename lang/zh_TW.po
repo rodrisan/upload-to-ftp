@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Upload to FTP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-31 23:43+0800\n"
-"PO-Revision-Date: 2011-10-31 23:43+0800\n"
+"POT-Creation-Date: 2011-11-08 13:41+0800\n"
+"PO-Revision-Date: 2011-11-08 13:41+0800\n"
 "Last-Translator: Richer Yang <fantasyworldidvtw@gmail.com>\n"
 "Language-Team:  <fantasyworldidvtw@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -124,12 +124,12 @@ msgid "FTP Mode:"
 msgstr "FTP 模式："
 
 #: ../admin.php:212
-msgid "Active"
-msgstr "主動"
-
-#: ../admin.php:213
 msgid "Passive"
 msgstr "被動"
+
+#: ../admin.php:213
+msgid "Active"
+msgstr "主動"
 
 #: ../admin.php:217
 msgid "FTP Directory:"
@@ -152,18 +152,32 @@ msgid "Rename file:"
 msgstr "檔案重新命名："
 
 #: ../admin.php:242
+#: ../admin.php:252
 msgid "disable"
 msgstr "停用"
 
 #: ../admin.php:243
+#: ../admin.php:251
 msgid "enable"
 msgstr "啟用"
 
-#: ../admin.php:246
+#: ../admin.php:245
 msgid "Proposal enabled! Because the file name to avoid some of the resulting error can not be expected"
 msgstr "建議啟用！以避免一些因為檔名而產生的不可預期的錯誤"
 
-#: ../admin.php:251
+#: ../admin.php:249
+msgid "Auto delete local file:"
+msgstr "自動刪除本地檔案："
+
+#: ../admin.php:253
+msgid "Only enable the when you local storage space have limited."
+msgstr "只有在你本地儲存空間有限制的時候才啟用。"
+
+#: ../admin.php:258
+msgid "Save original file"
+msgstr "保留原始檔"
+
+#: ../admin.php:263
 msgid "Save Changes"
 msgstr "儲存變更"
 

@@ -3,7 +3,7 @@ Contributors: Richer Yang
 Tags: upload, ftp, attachment
 Requires at least: 3.2.0
 Tested up to: 3.2.1
-Stable tag: 0.0.7
+Stable tag: 0.0.8
 
 let you can upload file to and download host .
 
