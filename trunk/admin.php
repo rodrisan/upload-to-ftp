@@ -18,12 +18,14 @@ function upload_to_ftp_display_column($name, $id) {
 	global $post;
 	if( $name == 'toftp' ) {
 		$metadate = get_post_meta($id, 'file_to_ftp', true);
-		if( $metadate['up_time'] == 1 ) {
-			$metadate['up_time'] = strtotime($post->post_date);
-			update_post_meta($id, 'file_to_ftp', $metadate);
-		}
-		if( $metadate['up_time'] ) {
-			echo(date('Y/m/d G:i', $metadate['up_time']));
+		if( isset($metadate['up_time']) ) {
+			if( $metadate['up_time'] == 1 ) {
+				$metadate['up_time'] = strtotime($post->post_date);
+				update_post_meta($id, 'file_to_ftp', $metadate);
+			}
+			if( $metadate['up_time'] ) {
+				echo(date('Y/m/d G:i', $metadate['up_time']));
+			}
 		} else {
 			_e('un-upload', 'upload-to-ftp');
 		}
@@ -47,7 +49,7 @@ if( !defined('FTP_BINARY') ) {
 	<div id="message" class="error"><p>
 		<span style="color:rad"><?php _e('Your server does not support FTP-related functions', 'upload-to-ftp'); ?></span>
 	</p></div>
-	</div>
+</div>
 	<?php
 	return true;
 }
@@ -155,7 +157,9 @@ if( !empty($_POST['Update_FTP']) ) {
 }
 
 if( !empty($_POST['Update']) ) {
-	$u2ftp_options['rename_file'] = (intval($_POST['u2ftp_rename_file']) == 1) ? true : false;
+	$u2ftp_options['rename_file'] = (intval($_POST['u2ftp_rename_file']) == 1) ? 1 : 0;
+	$u2ftp_options['auto_delete_local'] = (intval($_POST['u2ftp_auto_delete_local']) == 1) ? 1 : 0;
+	$u2ftp_options['save_original_file'] = (intval($_POST['u2ftp_save_original_file']) == 1) ? 1 : 0;
 	if( update_option('U2FTP_options', $u2ftp_options) ) {
 		$text = '<span style="color:green">' . __('Updated Basic Options Success', 'upload-to-ftp') . '</span>';
 	}
@@ -209,8 +213,8 @@ if( !empty($_POST['Update']) ) {
 		<tr>
 			<td><strong><?php _e('FTP Mode:', 'upload-to-ftp'); ?></strong></td>
 			<td>
-				<input type="radio" id="u2ftp_ftp_mode" name="u2ftp_ftp_mode" value="0" <?php checked('0', $u2ftp_options['ftp_mode']); ?> /> <?php _e('Active', 'upload-to-ftp'); ?>
 				<input type="radio" id="u2ftp_ftp_mode" name="u2ftp_ftp_mode" value="1" <?php checked('1', $u2ftp_options['ftp_mode']); ?> /> <?php _e('Passive', 'upload-to-ftp'); ?>
+				<input type="radio" id="u2ftp_ftp_mode" name="u2ftp_ftp_mode" value="0" <?php checked('0', $u2ftp_options['ftp_mode']); ?> /> <?php _e('Active', 'upload-to-ftp'); ?>
 			</td>
 		</tr>
 		<tr>
@@ -242,8 +246,20 @@ if( !empty($_POST['Update']) ) {
 					<option value="0"<?php selected('0', $u2ftp_options['rename_file']); ?>><?php _e('disable', 'upload-to-ftp'); ?></option>
 					<option value="1"<?php selected('1', $u2ftp_options['rename_file']); ?>><?php _e('enable', 'upload-to-ftp'); ?></option>
 				</select>
-				<br />
-				<?php _e('Proposal enabled! Because the file name to avoid some of the resulting error can not be expected', 'upload-to-ftp'); ?>
+				<br /><em><?php _e('Proposal enabled! Because the file name to avoid some of the resulting error can not be expected', 'upload-to-ftp'); ?></em>
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="2"><strong><?php _e('Auto delete local file:', 'upload-to-ftp'); ?></strong></td>
+			<td>
+				<input type="radio" id="u2ftp_auto_delete_local" name="u2ftp_auto_delete_local" value="0" <?php checked('0', $u2ftp_options['auto_delete_local']); ?> /> <?php _e('disable', 'upload-to-ftp'); ?>
+				<input type="radio" id="u2ftp_auto_delete_local" name="u2ftp_auto_delete_local" value="1" <?php checked('1', $u2ftp_options['auto_delete_local']); ?> /> <?php _e('enable', 'upload-to-ftp'); ?>
+				<br /><em><?php _e('Only enable the when you local storage space have limited.', 'upload-to-ftp'); ?></em>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="checkbox" name="u2ftp_save_original_file" id="u2ftp_save_original_file" value="1" <?php checked('1', $u2ftp_options['save_original_file']); ?> /> <?php _e('Save original file', 'upload-to-ftp'); ?>
 			</td>
 		</tr>
 	</table>
@@ -252,6 +268,6 @@ if( !empty($_POST['Update']) ) {
 	</p>
 </form>
 </div>
-<?php
+  <?php
 }
 ?>
