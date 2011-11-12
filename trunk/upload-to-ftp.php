@@ -3,7 +3,7 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.0.8
+Version: 0.0.9
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
@@ -38,7 +38,7 @@ function upload_to_ftp_init() {
 	$u2ftp_options['auto_delete_local'] = 0;
 	$u2ftp_options['save_original_file'] = 1;
 	add_option('U2FTP_options', $u2ftp_options, 'Upload to FTP Options');
-	update_option('U2FTP_version', '0.0.8');
+	update_option('U2FTP_version', '0.0.9');
 }
 
 class Upload_to_FTP {
@@ -79,6 +79,10 @@ class Upload_to_FTP {
 		if( version_compare($version, '0.0.8', '<') ) {
 			include_once(dirname(__FILE__) . '/include/update.php');
 			update_to_008();
+		}
+		if( version_compare($version, '0.0.9', '<') ) {
+			include_once(dirname(__FILE__) . '/include/update.php');
+			update_to_009();
 		}
 	}
 
@@ -139,16 +143,18 @@ class Upload_to_FTP {
 				for( $i = 1; isset($this->upload[$i]); $i++ ) {
 					@ftp_put($this->ftpc, $now_dir . $this->upload[$i], $dir['path'] . '/' . $this->upload[$i], FTP_BINARY);
 					if( $this->options['auto_delete_local'] == 1 ) {
-						unlink($dir['path'] . '/' . $this->upload[$i]);
+						@unlink($dir['path'] . '/' . $this->upload[$i]);
 					}
 				}
 			}
 			$metadate = array('up_time' => time(), 'up_dir' => $dir['subdir']);
-			if( substr($metadate['up_dir'], 0, 1) == '/' ) {
-				$metadate['up_dir'] = substr($metadate['up_dir'], 1);
-			}
-			if( substr($metadate['up_dir'], -1) == '/' ) {
-				$metadate['up_dir'] = substr($metadate['up_dir'], 0, -1);
+			if( strlen($metadate['up_dir']) > 0 ) {
+				if( substr($metadate['up_dir'], 0, 1) == '/' ) {
+					$metadate['up_dir'] = substr($metadate['up_dir'], 1);
+				}
+				if( substr($metadate['up_dir'], -1) != '/' ) {
+					$metadate['up_dir'] .= '/';
+				}
 			}
 			add_post_meta($this->upload['att_id'], 'file_to_ftp', $metadate, true);
 			$this->close_ftp();
@@ -159,7 +165,7 @@ class Upload_to_FTP {
 		$file_name = basename($attr['src']);
 		$meta_date = get_post_meta($att->ID, 'file_to_ftp', true);
 		if( isset($meta_date['up_time']) && $meta_date['up_time'] >= 1 ) {
-			$attr['src'] = $this->options['html_link_url'] . $meta_date['up_dir'] . '/' . $file_name;
+			$attr['src'] = $this->options['html_link_url'] . $meta_date['up_dir'] . $file_name;
 		}
 		return $attr;
 	}
@@ -168,7 +174,7 @@ class Upload_to_FTP {
 		$file_name = basename($url);
 		$meta_date = get_post_meta($att_id, 'file_to_ftp', true);
 		if( isset($meta_date['up_time']) && $meta_date['up_time'] >= 1 ) {
-			$url = $this->options['html_link_url'] . $meta_date['up_dir'] . '/' .  $file_name;
+			$url = $this->options['html_link_url'] . $meta_date['up_dir'] .  $file_name;
 		}
 		return $url;
 	}
@@ -197,7 +203,7 @@ class Upload_to_FTP {
 		if( isset($this->delete[0]) ) {
 			if( $this->options['ftp_delete_ok'] && $this->open_ftp() ) {
 				for( $i = 0; isset($this->delete[$i]); $i++ ) {
-					@ftp_delete($this->ftpc, $this->options['ftp_dir'] . $this->delete['up_dir'] . '/' . $this->delete[$i]);
+					@ftp_delete($this->ftpc, $this->options['ftp_dir'] . $this->delete['up_dir'] . $this->delete[$i]);
 				}
 				$this->close_ftp();
 			}
