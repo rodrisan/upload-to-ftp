@@ -28,4 +28,25 @@ function update_to_008() {
 	update_option('U2FTP_options', $u2ftp_options);
 	update_option('U2FTP_version', '0.0.8');
 }
+
+function update_to_009() {
+	global $wpdb;
+	$postmetas = $wpdb->get_results('SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key LIKE "file_to_ftp"');
+	if( $postmetas ) {
+		foreach( $postmetas as $postmeta ) {
+			$meta_date = get_post_meta($postmeta->post_id, 'file_to_ftp', true);
+			if( strlen($meta_date['up_dir']) > 1 ) {
+				if( substr($meta_date['up_dir'], -1) != '/' ) {
+					$meta_date['up_dir'] .= '/';
+					echo($meta_date['up_dir']);
+					update_post_meta($postmeta->post_id, 'file_to_ftp', $meta_date);
+				}
+			} else {
+				$meta_date['up_dir'] = '';
+				update_post_meta($postmeta->post_id, 'file_to_ftp', $meta_date);
+			}
+		}
+	}
+	update_option('U2FTP_version', '0.0.9');
+}
 ?>
