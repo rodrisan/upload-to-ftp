@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Upload to FTP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-08 13:41+0800\n"
-"PO-Revision-Date: 2011-11-08 13:41+0800\n"
+"POT-Creation-Date: 2012-03-14 00:42+0800\n"
+"PO-Revision-Date: 2012-03-14 00:42+0800\n"
 "Last-Translator: Richer Yang <fantasyworldidvtw@gmail.com>\n"
 "Language-Team:  <fantasyworldidvtw@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -23,115 +23,131 @@ msgstr "設定"
 msgid "to FTP"
 msgstr "上傳到 FTP"
 
-#: ../admin.php:28
+#: ../admin.php:30
 msgid "un-upload"
 msgstr "未上傳"
 
-#: ../admin.php:35
+#: ../admin.php:37
 msgid "Upload to FTP"
 msgstr "Upload to FTP"
 
-#: ../admin.php:42
+#: ../admin.php:44
 msgid "Upload to FTP Options"
 msgstr "Upload to FTP 設定"
 
-#: ../admin.php:48
+#: ../admin.php:50
 msgid "Your server does not support FTP-related functions"
 msgstr "你的伺服器不支援 FTP 相關函式"
 
-#: ../admin.php:96
+#: ../admin.php:102
 msgid "FTP connect error"
 msgstr "FTP 連結失敗"
 
-#: ../admin.php:102
+#: ../admin.php:108
 msgid "FTP login error with username"
 msgstr "FTP 登入失敗 使用者帳號："
 
-#: ../admin.php:108
+#: ../admin.php:114
 msgid "FTP open directory failure"
 msgstr "FTP 開啟指定目錄失敗"
 
-#: ../admin.php:111
+#: ../admin.php:117
 msgid "FTP is not writable"
 msgstr "FTP 是不可寫入的"
 
-#: ../admin.php:130
+#: ../admin.php:136
 msgid "HTML link url don't match FTP dir"
 msgstr "HTML 網址連結 與 FTP 目錄 不相吻合"
 
-#: ../admin.php:152
+#: ../admin.php:161
 msgid "Updated FTP Options Success"
 msgstr "成功的更新FTP設定"
 
-#: ../admin.php:160
+#: ../admin.php:171
 msgid "Updated Basic Options Success"
 msgstr "成功的基本更新設定"
 
-#: ../admin.php:170
+#: ../admin.php:182
 msgid "FTP Options"
 msgstr "FTP 設定"
 
-#: ../admin.php:173
+#: ../admin.php:185
 msgid "FTP Status:"
 msgstr "FTP 狀態："
 
-#: ../admin.php:175
+#: ../admin.php:186
 msgid "Upload Status:"
 msgstr "上傳狀態："
 
-#: ../admin.php:175
+#: ../admin.php:186
 msgid "Can upload"
 msgstr "可以上傳"
 
-#: ../admin.php:175
+#: ../admin.php:186
 msgid "Can not upload"
 msgstr "不能上傳"
 
-#: ../admin.php:176
+#: ../admin.php:189
 msgid "Delete Status:"
 msgstr "刪除狀態："
 
-#: ../admin.php:176
+#: ../admin.php:189
 msgid "Can delete"
 msgstr "可以刪除"
 
-#: ../admin.php:176
+#: ../admin.php:189
 msgid "Can not delete"
 msgstr "不能刪除"
 
-#: ../admin.php:180
+#: ../admin.php:192
+msgid "File Link Status:"
+msgstr "檔案連結狀態："
+
+#: ../admin.php:192
+msgid "HTML File Link is OK"
+msgstr "檔案連結正常"
+
+#: ../admin.php:192
+msgid "HTML File Link is Error"
+msgstr "檔案連結錯誤"
+
+#: ../admin.php:195
 msgid "FTP Host:"
 msgstr "FTP 主機："
 
-#: ../admin.php:186
+#: ../admin.php:199
 msgid "FTP Port:"
 msgstr "FTP 連接埠："
 
-#: ../admin.php:192
+#: ../admin.php:203
 msgid "FTP Timeout:"
 msgstr "FTP 逾時："
 
-#: ../admin.php:198
+#: ../admin.php:207
 msgid "FTP Username:"
 msgstr "FTP 使用者名稱："
 
-#: ../admin.php:204
+#: ../admin.php:211
 msgid "FTP Password:"
 msgstr "FTP 密碼："
 
-#: ../admin.php:210
+#: ../admin.php:212
+msgid "Only when you want to change your password, enter it."
+msgstr "只有在您想要變更密碼的時候輸入"
+
+#: ../admin.php:215
 msgid "FTP Mode:"
 msgstr "FTP 模式："
 
-#: ../admin.php:212
+#: ../admin.php:216
 msgid "Passive"
 msgstr "被動"
 
-#: ../admin.php:213
+#: ../admin.php:216
 msgid "Active"
 msgstr "主動"
 
-#: ../admin.php:217
+#: ../admin.php:219
 msgid "FTP Directory:"
 msgstr "FTP 目錄："
 
@@ -139,7 +155,7 @@ msgstr "FTP 目錄："
 msgid "HTML link url:"
 msgstr "HTML 網址連結："
 
-#: ../admin.php:230
+#: ../admin.php:227
 msgid "Save & Test Changes"
 msgstr "儲存 & 測試 變更"
 
@@ -151,40 +167,63 @@ msgstr "基本設定"
 msgid "Rename file:"
 msgstr "檔案重新命名："
 
-#: ../admin.php:242
-#: ../admin.php:252
+#: ../admin.php:240
+#: ../admin.php:245
 msgid "disable"
 msgstr "停用"
 
-#: ../admin.php:243
-#: ../admin.php:251
+#: ../admin.php:240
+#: ../admin.php:245
 msgid "enable"
 msgstr "啟用"
 
-#: ../admin.php:245
+#: ../admin.php:241
 msgid "Proposal enabled! Because the file name to avoid some of the resulting error can not be expected"
 msgstr "建議啟用！以避免一些因為檔名而產生的不可預期的錯誤"
 
-#: ../admin.php:249
+#: ../admin.php:244
 msgid "Auto delete local file:"
 msgstr "自動刪除本地檔案："
 
-#: ../admin.php:253
+#: ../admin.php:246
 msgid "Only enable the when you local storage space have limited."
 msgstr "只有在你本地儲存空間有限制的時候才啟用。"
 
-#: ../admin.php:258
+#: ../admin.php:249
 msgid "Save original file"
 msgstr "保留原始檔"
 
-#: ../admin.php:263
+#: ../admin.php:252
 msgid "Save Changes"
 msgstr "儲存變更"
 
-#: ../upload-to-ftp.php:95
+#: ../admin.php:261
+msgid "About Plugin"
+msgstr "關於外掛"
+
+#: ../admin.php:265
+msgid "Author's website"
+msgstr "作者的網站"
+
+#: ../admin.php:266
+msgid "Plugin webpage"
+msgstr "外掛網頁"
+
+#: ../admin.php:267
+msgid "Version history"
+msgstr "版本歷史"
+
+#: ../admin.php:268
+msgid "Version: "
+msgstr "版本："
+
+#: ../upload-to-ftp.php:86
 #, php-format
 msgid "Please go to <a href=\"%s\">Upload to ftp setting page</a> update you options."
 msgstr "請前往 <a href=\"%s\">Upload to FTP 設定頁面</a> 設定FTP資料"
+
+#~ msgid "Change Log"
+#~ msgstr "版本歷史"
 
 #~ msgid "not rename"
 #~ msgstr "不要 重新命名"

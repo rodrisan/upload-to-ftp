@@ -60,11 +60,15 @@ if( !empty($_POST['Update_FTP']) ) {
 	$ftp_timeout = intval($_POST['u2ftp_ftp_timeout']);
 	$ftp_username = trim($_POST['u2ftp_ftp_username']);
 	$ftp_password = trim($_POST['u2ftp_ftp_password']);
+	if( empty($ftp_password) ) {
+		$ftp_password = $u2ftp_options['ftp_password'];
+	}
 	$ftp_mode = (intval($_POST['u2ftp_ftp_mode']) == 1) ? 1 : 0;
 	$ftp_dir = trim($_POST['u2ftp_ftp_dir']);
 	$html_link_url = trim($_POST['u2ftp_html_link_url']);
 	$ftp_uplode_ok = false;
 	$ftp_delete_ok = false;
+	$html_file_line_ok = false;
 	
 	preg_match('/ftp[s]?:\/\//i', $ftp_host, $temp);
 	if( isset($temp[0]) ) {
@@ -131,6 +135,8 @@ if( !empty($_POST['Update_FTP']) ) {
 					if( $body != 'This is a test file for "Upload to FTP"' ) {
 						$error = '<span style="color:rad">' . __('HTML link url don\'t match FTP dir', 'upload-to-ftp') . '</span>';
 						$error .= '<br />' . $html_link_url . 'test-file.txt';
+					} else {
+						$html_file_line_ok = true;
 					}
 					if( @ftp_delete($ftpc, $ftp_dir . 'test-file.txt') ) {
 						$ftp_delete_ok = true;
@@ -149,6 +155,7 @@ if( !empty($_POST['Update_FTP']) ) {
 	$u2ftp_options['ftp_dir'] = $ftp_dir;
 	$u2ftp_options['ftp_uplode_ok'] = $ftp_uplode_ok;
 	$u2ftp_options['html_link_url'] = $html_link_url;
+	$u2ftp_options['html_file_line_ok'] = $html_file_line_ok;
 	$u2ftp_options['ftp_delete_ok'] = $ftp_delete_ok;
 	if( update_option('U2FTP_options', $u2ftp_options) ) {
 		$text = '<span style="color:green">' . __('Updated FTP Options Success', 'upload-to-ftp') . '</span>';
@@ -166,107 +173,104 @@ if( !empty($_POST['Update']) ) {
 	$u2ftp_options = get_option('U2FTP_options', array());
 }
 ?>
-<form method="post" action="">
-	<?php if(!empty($text)) { echo '<div id="message" class="updated"><p>'.$text.'</p></div>'; } ?>
-	<?php if(!empty($error)) { echo '<div id="message" class="error"><p>'.$error.'</p></div>'; } ?>
+<?php if(!empty($text)) { echo '<div id="message" class="updated"><p>'.$text.'</p></div>'; } ?>
+<?php if(!empty($error)) { echo '<div id="message" class="error"><p>'.$error.'</p></div>'; } ?>
+<table width="100%"><tr>
+<td><form method="post" action="">
 	<table class="widefat">
 		<thead><tr>
-			<th colspan="2"><?php _e('FTP Options', 'upload-to-ftp'); ?></th>
+			<th colspan="2"><strong><?php _e('FTP Options', 'upload-to-ftp'); ?></strong></th>
 		</tr></thead>
 		<tr>
-			<td><strong><?php _e('FTP Status:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<?php _e('Upload Status:', 'upload-to-ftp'); ?> <strong><?php $u2ftp_options['ftp_uplode_ok'] ? _e('Can upload', 'upload-to-ftp') : _e('Can not upload', 'upload-to-ftp'); ?></strong><br />
-				<?php _e('Delete Status:', 'upload-to-ftp'); ?> <strong><?php $u2ftp_options['ftp_delete_ok'] ? _e('Can delete', 'upload-to-ftp') : _e('Can not delete', 'upload-to-ftp'); ?></strong>
-			</td>
+			<td rowspan="3"><strong><?php _e('FTP Status:', 'upload-to-ftp'); ?></strong></td>
+			<td><?php _e('Upload Status:', 'upload-to-ftp'); ?> <strong><?php $u2ftp_options['ftp_uplode_ok'] ? _e('Can upload', 'upload-to-ftp') : _e('Can not upload', 'upload-to-ftp'); ?></strong></td>
 		</tr>
 		<tr>
+			<td><?php _e('Delete Status:', 'upload-to-ftp'); ?><strong><?php $u2ftp_options['ftp_delete_ok'] ? _e('Can delete', 'upload-to-ftp') : _e('Can not delete', 'upload-to-ftp'); ?></strong></td>
+		</tr>
+		<tr>
+			<td><?php _e('File Link Status:', 'upload-to-ftp'); ?><strong><?php $u2ftp_options['html_file_line_ok'] ? _e('HTML File Link is OK', 'upload-to-ftp') : _e('HTML File Link is Error', 'upload-to-ftp'); ?></strong></td>
+		</tr>
+		<tr class="alternate">
 			<td><strong><?php _e('FTP Host:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				ftp://<input type="text" id="u2ftp_ftp_host" name="u2ftp_ftp_host" size="30" value="<?php echo($u2ftp_options['ftp_host']); ?>" />
-			</td>
+			<td>ftp://<input type="text" id="u2ftp_ftp_host" name="u2ftp_ftp_host" size="30" value="<?php echo($u2ftp_options['ftp_host']); ?>" /></td>
 		</tr>
 		<tr>
 			<td><strong><?php _e('FTP Port:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<input type="text" id="u2ftp_ftp_port" name="u2ftp_ftp_port" size="6" value="<?php echo($u2ftp_options['ftp_port']); ?>" />
-			</td>
+			<td><input type="text" id="u2ftp_ftp_port" name="u2ftp_ftp_port" size="6" value="<?php echo($u2ftp_options['ftp_port']); ?>" /></td>
 		</tr>
-		<tr>
+		<tr class="alternate">
 			<td><strong><?php _e('FTP Timeout:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<input type="text" id="u2ftp_ftp_timeout" name="u2ftp_ftp_timeout" size="6" value="<?php echo($u2ftp_options['ftp_timeout']); ?>" />
-			</td>
+			<td><input type="text" id="u2ftp_ftp_timeout" name="u2ftp_ftp_timeout" size="4" value="<?php echo($u2ftp_options['ftp_timeout']); ?>" /></td>
 		</tr>
 		<tr>
 			<td><strong><?php _e('FTP Username:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<input type="text" id="u2ftp_ftp_username" name="u2ftp_ftp_username" size="30" value="<?php echo($u2ftp_options['ftp_username']); ?>" />
-			</td>
+			<td><input type="text" id="u2ftp_ftp_username" name="u2ftp_ftp_username" size="30" value="<?php echo($u2ftp_options['ftp_username']); ?>" /></td>
 		</tr>
-		<tr>
+		<tr class="alternate">
 			<td><strong><?php _e('FTP Password:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<input type="text" id="u2ftp_ftp_password" name="u2ftp_ftp_password" size="30" value="<?php echo($u2ftp_options['ftp_password']); ?>" />
-			</td>
+			<td><input type="text" id="u2ftp_ftp_password" name="u2ftp_ftp_password" size="30" /><br /><?php if( !empty($u2ftp_options['ftp_password']) ) { _e('Only when you want to change your password, enter it.', 'upload-to-ftp'); } ?></td>
 		</tr>
 		<tr>
 			<td><strong><?php _e('FTP Mode:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<input type="radio" id="u2ftp_ftp_mode" name="u2ftp_ftp_mode" value="1" <?php checked('1', $u2ftp_options['ftp_mode']); ?> /> <?php _e('Passive', 'upload-to-ftp'); ?>
-				<input type="radio" id="u2ftp_ftp_mode" name="u2ftp_ftp_mode" value="0" <?php checked('0', $u2ftp_options['ftp_mode']); ?> /> <?php _e('Active', 'upload-to-ftp'); ?>
-			</td>
+			<td><input type="radio" id="u2ftp_ftp_mode" name="u2ftp_ftp_mode" value="1" <?php checked('1', $u2ftp_options['ftp_mode']); ?> /> <?php _e('Passive', 'upload-to-ftp'); ?> <input type="radio" id="u2ftp_ftp_mode" name="u2ftp_ftp_mode" value="0" <?php checked('0', $u2ftp_options['ftp_mode']); ?> /> <?php _e('Active', 'upload-to-ftp'); ?></td>
 		</tr>
-		<tr>
+		<tr class="alternate">
 			<td><strong><?php _e('FTP Directory:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<input type="text" id="u2ftp_ftp_dir" name="u2ftp_ftp_dir" size="60" value="<?php echo($u2ftp_options['ftp_dir']); ?>" />
-			</td>
+			<td><input type="text" id="u2ftp_ftp_dir" name="u2ftp_ftp_dir" size="60" value="<?php echo($u2ftp_options['ftp_dir']); ?>" /></td>
 		</tr>
 		<tr>
 			<td><strong><?php _e('HTML link url:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<input type="text" id="u2ftp_html_link_url" name="u2ftp_html_link_url" size="60" value="<?php echo($u2ftp_options['html_link_url']); ?>" />
-			</td>
+			<td><input type="text" id="u2ftp_html_link_url" name="u2ftp_html_link_url" size="60" value="<?php echo($u2ftp_options['html_link_url']); ?>" /></td>
 		</tr>
+		<tfoot><tr>
+			<td align="center"><input type="submit" name="Update_FTP" class="button-primary" value="<?php _e('Save & Test Changes', 'upload-to-ftp'); ?>" /></td>
+			<td>&nbsp;</td>
+		</tr></tfoot>
 	</table>
-	<p class="submit">
-		<input type="submit" name="Update_FTP" class="button-primary" value="<?php _e('Save & Test Changes', 'upload-to-ftp'); ?>" />
-	</p>
 </form>
+<p>&nbsp;</p>
 <form method="post" action="">
 	<table class="widefat">
 		<thead><tr>
-			<th colspan="2"><?php _e('Basic Options', 'upload-to-ftp'); ?></th>
+			<th colspan="2"><strong><?php _e('Basic Options', 'upload-to-ftp'); ?></strong></th>
 		</tr></thead>
 		<tr>
 			<td><strong><?php _e('Rename file:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<select name="u2ftp_rename_file" size="1">
-					<option value="0"<?php selected('0', $u2ftp_options['rename_file']); ?>><?php _e('disable', 'upload-to-ftp'); ?></option>
-					<option value="1"<?php selected('1', $u2ftp_options['rename_file']); ?>><?php _e('enable', 'upload-to-ftp'); ?></option>
-				</select>
-				<br /><em><?php _e('Proposal enabled! Because the file name to avoid some of the resulting error can not be expected', 'upload-to-ftp'); ?></em>
-			</td>
+			<td><select name="u2ftp_rename_file" size="1"><option value="0"<?php selected('0', $u2ftp_options['rename_file']); ?>><?php _e('disable', 'upload-to-ftp'); ?></option><option value="1"<?php selected('1', $u2ftp_options['rename_file']); ?>><?php _e('enable', 'upload-to-ftp'); ?></option></select>
+			<br /><em><?php _e('Proposal enabled! Because the file name to avoid some of the resulting error can not be expected', 'upload-to-ftp'); ?></em></td>
 		</tr>
-		<tr>
+		<tr class="alternate">
 			<td rowspan="2"><strong><?php _e('Auto delete local file:', 'upload-to-ftp'); ?></strong></td>
-			<td>
-				<input type="radio" id="u2ftp_auto_delete_local" name="u2ftp_auto_delete_local" value="0" <?php checked('0', $u2ftp_options['auto_delete_local']); ?> /> <?php _e('disable', 'upload-to-ftp'); ?>
-				<input type="radio" id="u2ftp_auto_delete_local" name="u2ftp_auto_delete_local" value="1" <?php checked('1', $u2ftp_options['auto_delete_local']); ?> /> <?php _e('enable', 'upload-to-ftp'); ?>
-				<br /><em><?php _e('Only enable the when you local storage space have limited.', 'upload-to-ftp'); ?></em>
-			</td>
+			<td><input type="radio" id="u2ftp_auto_delete_local" name="u2ftp_auto_delete_local" value="0" <?php checked('0', $u2ftp_options['auto_delete_local']); ?> /> &nbsp; <?php _e('disable', 'upload-to-ftp'); ?><input type="radio" id="u2ftp_auto_delete_local" name="u2ftp_auto_delete_local" value="1" <?php checked('1', $u2ftp_options['auto_delete_local']); ?> /> <?php _e('enable', 'upload-to-ftp'); ?>
+			<br /><em><?php _e('Only enable the when you local storage space have limited.', 'upload-to-ftp'); ?></em></td>
 		</tr>
 		<tr>
+			<td><input type="checkbox" name="u2ftp_save_original_file" id="u2ftp_save_original_file" value="1" <?php checked('1', $u2ftp_options['save_original_file']); ?> /> <?php _e('Save original file', 'upload-to-ftp'); ?></td>
+		</tr>
+		<tfoot><tr>
+			<td align="center"><input type="submit" name="Update" class="button-primary" value="<?php _e('Save Changes', 'upload-to-ftp'); ?>" /></td>
+			<td>&nbsp;</td>
+		</tr></tfoot>
+	</table>
+</form></td>
+<td width="30">&nbsp;</td>
+<td valign="top">
+	<table class="widefat">
+		<thead><tr>
+			<th colspan="2"><strong><?php _e('About Plugin', 'upload-to-ftp'); ?></strong></th>
+		</tr></thead>
+		<tr>
 			<td>
-				<input type="checkbox" name="u2ftp_save_original_file" id="u2ftp_save_original_file" value="1" <?php checked('1', $u2ftp_options['save_original_file']); ?> /> <?php _e('Save original file', 'upload-to-ftp'); ?>
+				<p><a class="ure_rsb_link" target="_blank" href="http://fantasyworld.idv.tw/"><?php _e('Author\'s website', 'upload-to-ftp'); ?></a></p>
+				<p><a class="ure_rsb_link" target="_blank" href="http://wwpteach.com/upload-to-ftp"><?php _e('Plugin webpage', 'upload-to-ftp'); ?></a></p>
+				<p><a class="ure_rsb_link" target="_blank" href="http://wwpteach.com/upload-to-ftp/history"><?php _e('Version history', 'upload-to-ftp'); ?></a></p>
+				<p><?php _e('Version: ', 'upload-to-ftp'); echo(get_option('U2FTP_version'));?></p>
 			</td>
 		</tr>
 	</table>
-	<p class="submit">
-		<input type="submit" name="Update" class="button-primary" value="<?php _e('Save Changes', 'upload-to-ftp'); ?>" />
-	</p>
-</form>
+</td></tr>
+</table>
 </div>
   <?php
 }
