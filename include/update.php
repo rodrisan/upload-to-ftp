@@ -1,5 +1,19 @@
 <?php
-function update_to_006() {
+$version = get_option('U2FTP_version', '0.0.5.1');
+if( version_compare($version, '0.0.6', '<') ) {
+	update_to_0_0_6();
+}
+if( version_compare($version, '0.0.8', '<') ) {
+	update_to_0_0_8();
+}
+if( version_compare($version, '0.0.9', '<') ) {
+	update_to_0_0_9();
+}
+if( version_compare($version, '0.1.0', '<') ) {
+	update_to_0_1_0();
+}
+
+function update_to_0_0_6() {
 	global $wpdb;
 	$postmetas = $wpdb->get_results('SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key LIKE "file_to_ftp"');
 	if( $postmetas ) {
@@ -21,7 +35,7 @@ function update_to_006() {
 	update_option('U2FTP_version', '0.0.6');
 }
 
-function update_to_008() {
+function update_to_0_0_8() {
 	$u2ftp_options = get_option('U2FTP_options', array());
 	$u2ftp_options['auto_delete_local'] = 0;
 	$u2ftp_options['save_original_file'] = 1;
@@ -29,7 +43,7 @@ function update_to_008() {
 	update_option('U2FTP_version', '0.0.8');
 }
 
-function update_to_009() {
+function update_to_0_0_9() {
 	global $wpdb;
 	$postmetas = $wpdb->get_results('SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key LIKE "file_to_ftp"');
 	if( $postmetas ) {
@@ -48,5 +62,16 @@ function update_to_009() {
 		}
 	}
 	update_option('U2FTP_version', '0.0.9');
+}
+
+function update_to_0_1_0() {
+	$u2ftp_options = get_option('U2FTP_options', array());
+	if( $u2ftp_options['ftp_uplode_ok'] && $u2ftp_options['ftp_delete_ok'] ) {
+		$u2ftp_options['html_file_line_ok'] = true;
+	} else {
+		$u2ftp_options['html_file_line_ok'] = false;
+	}
+	update_option('U2FTP_options', $u2ftp_options);
+	update_option('U2FTP_version', '0.1.0');
 }
 ?>
