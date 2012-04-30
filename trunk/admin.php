@@ -54,7 +54,7 @@ if( !defined('FTP_BINARY') ) {
 	return true;
 }
 
-if( !empty($_POST['Update_FTP']) ) {
+if( !empty($_POST['U2FTP_Update_ftpsetting']) ) {
 	$ftp_host = trim($_POST['u2ftp_ftp_host']);
 	$ftp_port = intval($_POST['u2ftp_ftp_port']);
 	$ftp_timeout = intval($_POST['u2ftp_ftp_timeout']);
@@ -163,7 +163,7 @@ if( !empty($_POST['Update_FTP']) ) {
 	$u2ftp_options = get_option('U2FTP_options', array());
 }
 
-if( !empty($_POST['Update']) ) {
+if( !empty($_POST['U2FTP_Update_setting']) ) {
 	$u2ftp_options['rename_file'] = (intval($_POST['u2ftp_rename_file']) == 1) ? 1 : 0;
 	$u2ftp_options['auto_delete_local'] = (intval($_POST['u2ftp_auto_delete_local']) == 1) ? 1 : 0;
 	$u2ftp_options['save_original_file'] = (intval($_POST['u2ftp_save_original_file']) == 1) ? 1 : 0;
@@ -224,7 +224,7 @@ if( !empty($_POST['Update']) ) {
 			<td><input type="text" id="u2ftp_html_link_url" name="u2ftp_html_link_url" size="60" value="<?php echo($u2ftp_options['html_link_url']); ?>" /></td>
 		</tr>
 		<tfoot><tr>
-			<td align="center"><input type="submit" name="Update_FTP" class="button-primary" value="<?php _e('Save & Test Changes', 'upload-to-ftp'); ?>" /></td>
+			<td align="center"><input type="submit" name="U2FTP_Update_ftpsetting" class="button-primary" value="<?php _e('Save & Test Changes', 'upload-to-ftp'); ?>" /></td>
 			<td>&nbsp;</td>
 		</tr></tfoot>
 	</table>
@@ -249,7 +249,7 @@ if( !empty($_POST['Update']) ) {
 			<td><input type="checkbox" name="u2ftp_save_original_file" id="u2ftp_save_original_file" value="1" <?php checked('1', $u2ftp_options['save_original_file']); ?> /> <?php _e('Save original file', 'upload-to-ftp'); ?></td>
 		</tr>
 		<tfoot><tr>
-			<td align="center"><input type="submit" name="Update" class="button-primary" value="<?php _e('Save Changes', 'upload-to-ftp'); ?>" /></td>
+			<td align="center"><input type="submit" name="U2FTP_Update_setting" class="button-primary" value="<?php _e('Save Changes', 'upload-to-ftp'); ?>" /></td>
 			<td>&nbsp;</td>
 		</tr></tfoot>
 	</table>
