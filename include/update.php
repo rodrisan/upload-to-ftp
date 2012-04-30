@@ -1,5 +1,5 @@
 <?php
-$version = get_option('U2FTP_version', '0.0.5.1');
+$version = get_option('U2FTP_version', '0.1.1');
 if( version_compare($version, '0.0.6', '<') ) {
 	update_to_0_0_6();
 }
