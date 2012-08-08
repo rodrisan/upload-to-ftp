@@ -1,5 +1,5 @@
 <?php
-$version = get_option('U2FTP_version', '0.1.1');
+$version = get_option('U2FTP_version', '0.0.1');
 if( version_compare($version, '0.0.6', '<') ) {
 	update_to_0_0_6();
 }
@@ -11,6 +11,12 @@ if( version_compare($version, '0.0.9', '<') ) {
 }
 if( version_compare($version, '0.1.0', '<') ) {
 	update_to_0_1_0();
+}
+if( version_compare($version, '0.1.1', '<') ) {
+	update_to_0_1_1();
+}
+if( version_compare($version, '0.1.2', '<') ) {
+	update_option('U2FTP_version', '0.1.2');
 }
 
 function update_to_0_0_6() {
@@ -73,5 +79,9 @@ function update_to_0_1_0() {
 	}
 	update_option('U2FTP_options', $u2ftp_options);
 	update_option('U2FTP_version', '0.1.0');
+}
+
+function update_to_0_1_1() {
+	update_option('U2FTP_version', '0.1.1');
 }
 ?>
