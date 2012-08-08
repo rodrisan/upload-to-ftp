@@ -3,7 +3,7 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.1.1
+Version: 0.1.2
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
@@ -42,7 +42,7 @@ if( is_admin() ) {
 	$currentLocale = get_locale();
 	if( !empty($currentLocale) ) {
 		$moFile = dirname(__FILE__) . '/lang/' . $currentLocale . '.mo';
-		if( @file_exists($moFile) && is_readable($moFile) ) {
+		if( @is_file($moFile) && is_readable($moFile) ) {
 			load_textdomain('upload-to-ftp', $moFile);
 		}
 	}
@@ -113,12 +113,18 @@ class Upload_to_FTP {
 	
 	function file_rename($file_name) {
 		$parts = explode('.', $file_name);
-		 if( count($parts) < 2 ) {
-			return md5($file_name);
+		if( preg_match('@^[a-z0-9\-_]*$@i', $parts[0]) ) {
+			$file_name = $parts[0];
+		} else {
+			$file_name = substr(md5($parts[0]), 0, 10);
 		}
-		$filename = array_shift($parts);
-		$extension = array_pop($parts);
-		return substr(md5($filename), 0, 10) . '.' . $extension;
+		if( count($parts) < 2 ) {
+			return $file_name;
+		} else {
+			$extension = array_pop($parts);
+			return $file_name . '.' . $extension;
+		}
+		
 	}
 
 	function upload_main_file($att_id) {
@@ -155,7 +161,7 @@ class Upload_to_FTP {
 	}
 
 	function load_ftp_file_to_edit($file) {
-		if( !file_exists($file) ) {
+		if( !is_file($file) ) {
 			if( function_exists('fopen') && function_exists('ini_get') && true == ini_get('allow_url_fopen') ) {
 				$file = $this->clear_basedir($file);
 				$file = $this->options['html_link_url'] . '/' . $file;
