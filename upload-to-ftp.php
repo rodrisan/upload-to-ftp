@@ -3,14 +3,10 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.1.2
+Version: 0.1.3
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
-
-if( is_callable('set_time_limit') ) {
-	set_time_limit(60);
-}
 
 register_activation_hook(__FILE__, 'upload_to_ftp_init');
 function upload_to_ftp_init() {
@@ -33,12 +29,14 @@ function upload_to_ftp_init() {
 		$u2ftp_options['auto_delete_local'] = 0;
 		$u2ftp_options['save_original_file'] = 1;
 		update_option('U2FTP_options', $u2ftp_options);
-		update_option('U2FTP_version', '0.1.1');
+		update_option('U2FTP_version', '0.1.3');
 	}
 }
 
 if( is_admin() ) {
-	include(dirname(__FILE__) . '/include/update.php');
+	if( version_compare(get_option('U2FTP_version', '0.1.3'), '0.1.3', '!=') ) {
+		include(dirname(__FILE__) . '/include/update.php');
+	}
 	$currentLocale = get_locale();
 	if( !empty($currentLocale) ) {
 		$moFile = dirname(__FILE__) . '/lang/' . $currentLocale . '.mo';
@@ -55,10 +53,6 @@ class Upload_to_FTP {
 	var $add_list;
 
 	function __construct() {
-		$this->Upload_to_FTP();
-	}
-
-	protected function Upload_to_FTP() {
 		$this->options = get_option('U2FTP_options', array());
 		$this->ftpc = false;
 		$this->add_list = array();
@@ -72,9 +66,7 @@ class Upload_to_FTP {
 			add_filter('sanitize_file_name', array(&$this, 'file_rename'));
 		}
 
-		add_action('add_attachment', array(&$this, 'upload_main_file'));
-		add_filter('update_attached_file', array(&$this, 'upload_edit_file'));
-		add_filter('image_make_intermediate_size', array(&$this, 'upload_intermediate_file'));
+		add_filter('wp_update_attachment_metadata', array(&$this, 'set_upload_file'), 10, 2);
 
 		add_filter('wp_delete_file', array(&$this, 'do_delete_file'));
 
@@ -85,32 +77,10 @@ class Upload_to_FTP {
 		add_action('shutdown', array(&$this, 'ftp_shutdown'));
 	}
 
-	function ftp_shutdown() {
-		if( isset($this->add_list['main']) ) {
-			if( $this->do_upload_file($this->add_list['main']['file']) ) {
-				$dir = $this->clear_basedir($this->add_list['main']['file']);
-				$dir = substr($dir, 0, strrpos($dir, '/') + 1);
-				$metadate = array('up_time' => time(), 'up_dir' => $dir);
-				add_post_meta($this->add_list['main']['id'], 'file_to_ftp', $metadate, true);
-				if( $this->options['auto_delete_local'] == 1 && $this->options['save_original_file'] == 0 ) {
-					unlink($this->add_list['main']['file']);
-				}
-			}
-			unset($this->add_list['main']);
-		}
-		foreach( $this->add_list as $file ) {
-			if( $this->do_upload_file($file['file']) ) {
-				if( $this->options['auto_delete_local'] == 1 ) {
-					@unlink($file['file']);
-				}
-			}
-		}
-	}
-
 	function show_notices() {
 		printf('<div id="up2ftp_notices" class="updated"><p>' . __('Please go to <a href="%s">Upload to ftp setting page</a> update you options.', 'upload-to-ftp') . '</p></div>', 'options-general.php?page=upload-to-ftp');
 	}
-	
+
 	function file_rename($file_name) {
 		$parts = explode('.', $file_name);
 		if( preg_match('@^[a-z0-9\-_]*$@i', $parts[0]) ) {
@@ -124,32 +94,38 @@ class Upload_to_FTP {
 			$extension = array_pop($parts);
 			return $file_name . '.' . $extension;
 		}
-		
 	}
 
-	function upload_main_file($att_id) {
-		$att_file = get_attached_file($att_id);
-		$this->add_list['main'] = array('id' => $att_id, 'file' => $att_file);
-	}
-
-	function upload_edit_file($file) {
-		$this->add_list[] = array('id' => 0, 'file' => $file);
-		return $file;
-	}
-
-	function upload_intermediate_file($file) {
-		$this->add_list[] = array('id' => 0, 'file' => $file);
-		return $file;
-	}
-
-	function do_upload_file($file) {
-		if( $this->options['ftp_uplode_ok'] && $this->open_ftp() ) {
-			$dir = $this->clear_basedir($file);
-			$dir = '/' . substr($dir, 0, strrpos($dir, '/'));
-			$dir = $this->u2ftp_mkdir($dir);
-			return @ftp_put($this->ftpc, $dir . basename($file), $file, FTP_BINARY);
+	function set_upload_file($data, $id) {
+		$pid = wp_get_post_parent_id($id);
+		if( $pid > 0 ) {
+			if( $post = get_post($pid) ) {
+				if( substr($post->post_date, 0, 4) > 0 ) {
+					$time = $post->post_date;
+				}
+			}
 		}
-		return false;
+		if( !isset($time) ) {
+			$post = get_post($id);
+			$time = $post->post_date;
+		}
+		$uploads = wp_upload_dir($time);
+		$local_file = $uploads['basedir'] . '/' . $data['file'];
+		$this->add_list[] = array(
+			'id' => $id,
+			'local_file' => $local_file,
+			'ftp_file' => $this->make_local_to_ftp($local_file)
+		);
+		foreach( $data['sizes'] as $size_data ) {
+			$local_file = $uploads['path'] . '/' . $size_data['file'];
+			$this->add_list[] = array(
+				'id' => 0,
+				'local_file' => $local_file,
+				'ftp_file' => $this->make_local_to_ftp($local_file)
+			);
+		}
+		$this->do_ftp_upload();
+		return $data;
 	}
 
 	function do_delete_file($file) {
@@ -190,34 +166,21 @@ class Upload_to_FTP {
 		return $url;
 	}
 
-	function clear_basedir($file) {
-		if( ($uploads = wp_upload_dir()) && false === $uploads['error'] ) {
-			if( 0 === strpos($file, $uploads['basedir']) ) {
-				$file = str_replace($uploads['basedir'], '', $file);
-				$file = ltrim($file, '/');
-			}
+	function ftp_shutdown() {
+		if( $this->ftpc ) {
+			@ftp_close($this->ftpc);
+			$this->ftpc = false;
 		}
-		return $file;
 	}
 
-	function open_ftp() {
-		if( $this->ftpc ) {
-			return true;
-		}
-		$this->ftpc = @ftp_connect($this->options['ftp_host'], $this->options['ftp_port'], $this->options['ftp_timeout']);
-		if( $this->ftpc ) {
-			if( @ftp_login($this->ftpc , $this->options['ftp_username'], $this->options['ftp_password']) ) {
-				@ftp_pasv($this->ftpc, (bool) $this->options['ftp_mode']);
-				return true;
-			} else {
-				@ftp_close($this->ftpc);
-				$this->ftpc = false;
-			}
-		}
-		return false;
+	protected function make_local_to_ftp($local_file) {
+		$dir = $this->clear_basedir($local_file);
+		$dir = '/' . substr($dir, 0, strrpos($dir, '/'));
+		$dir = $this->ftp_mkdir($dir);
+		return $dir . basename($local_file);
 	}
 
-	function u2ftp_mkdir($dir) {
+	protected function ftp_mkdir($dir) {
 		if( !$this->ftpc ) {
 			$this->open_ftp();
 		}
@@ -233,11 +196,67 @@ class Upload_to_FTP {
 		return $now_dir;
 	}
 
-	function close_ftp() {
-		if( $this->ftpc ) {
-			@ftp_close($this->ftpc);
-			$this->ftpc = false;
+	protected function clear_basedir($file) {
+		if( ($uploads = wp_upload_dir()) && false === $uploads['error'] ) {
+			if( 0 === strpos($file, $uploads['basedir']) ) {
+				$file = str_replace($uploads['basedir'], '', $file);
+				$file = ltrim($file, '/');
+			}
 		}
+		return $file;
+	}
+
+	protected function do_ftp_upload() {
+		if( count($this->add_list) > 0 ) {
+			$up_time = current_time('timestamp');
+			foreach( $this->add_list as $file ) {
+				if( $this->do_upload_file($file['ftp_file'], $file['local_file']) ) {
+					if( $file['id'] != 0 ) {
+						$up_dir = dirname($file['ftp_file']);
+						$up_dir = str_replace($this->options['ftp_dir'], '', $up_dir) . '/';
+						$metadate = array(
+							'up_time' => $up_time,
+							'up_dir' => $up_dir
+						);
+						add_post_meta($file['id'], 'file_to_ftp', $metadate, true);
+						if( $this->options['auto_delete_local'] == 1 && $this->options['save_original_file'] == 0 ) {
+							file_put_contents($file['local_file'], '');
+						}
+					} else {
+						if( $this->options['auto_delete_local'] == 1 ) {
+							@unlink($file['local_file']);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	protected function do_upload_file($ftp_file, $local_file) {
+		if( $this->options['ftp_uplode_ok'] && $this->open_ftp() ) {
+			return @ftp_put($this->ftpc, $ftp_file, $local_file, FTP_BINARY);
+		}
+		return false;
+	}
+
+	protected function open_ftp() {
+		if( $this->ftpc ) {
+			return true;
+		}
+		if( is_callable('set_time_limit') ) {
+			set_time_limit(60);
+		}
+		$this->ftpc = @ftp_connect($this->options['ftp_host'], $this->options['ftp_port'], $this->options['ftp_timeout']);
+		if( $this->ftpc ) {
+			if( @ftp_login($this->ftpc , $this->options['ftp_username'], $this->options['ftp_password']) ) {
+				@ftp_pasv($this->ftpc, (bool) $this->options['ftp_mode']);
+				return true;
+			} else {
+				@ftp_close($this->ftpc);
+				$this->ftpc = false;
+			}
+		}
+		return false;
 	}
 }
 

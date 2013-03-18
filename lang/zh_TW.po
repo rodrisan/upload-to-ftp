@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Upload to FTP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 00:42+0800\n"
-"PO-Revision-Date: 2012-03-14 00:42+0800\n"
+"POT-Creation-Date: 2013-03-18 15:49+0800\n"
+"PO-Revision-Date: 2013-03-18 15:50+0800\n"
 "Last-Translator: Richer Yang <fantasyworldidvtw@gmail.com>\n"
 "Language-Team:  <fantasyworldidvtw@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -11,8 +11,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-Country: TAIWAN\n"
 "X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: ./..\n"
 
 #: ../admin.php:5
@@ -63,163 +63,179 @@ msgstr "HTML 網址連結 與 FTP 目錄 不相吻合"
 msgid "Updated FTP Options Success"
 msgstr "成功的更新FTP設定"
 
-#: ../admin.php:171
+#: ../admin.php:175
 msgid "Updated Basic Options Success"
 msgstr "成功的基本更新設定"
 
-#: ../admin.php:182
+#: ../admin.php:186
 msgid "FTP Options"
 msgstr "FTP 設定"
 
-#: ../admin.php:185
+#: ../admin.php:189
 msgid "FTP Status:"
 msgstr "FTP 狀態："
 
-#: ../admin.php:186
+#: ../admin.php:190
 msgid "Upload Status:"
 msgstr "上傳狀態："
 
-#: ../admin.php:186
+#: ../admin.php:190
 msgid "Can upload"
 msgstr "可以上傳"
 
-#: ../admin.php:186
+#: ../admin.php:190
 msgid "Can not upload"
 msgstr "不能上傳"
 
-#: ../admin.php:189
+#: ../admin.php:193
 msgid "Delete Status:"
 msgstr "刪除狀態："
 
-#: ../admin.php:189
+#: ../admin.php:193
 msgid "Can delete"
 msgstr "可以刪除"
 
-#: ../admin.php:189
+#: ../admin.php:193
 msgid "Can not delete"
 msgstr "不能刪除"
 
-#: ../admin.php:192
+#: ../admin.php:196
 msgid "File Link Status:"
 msgstr "檔案連結狀態："
 
-#: ../admin.php:192
+#: ../admin.php:196
 msgid "HTML File Link is OK"
 msgstr "檔案連結正常"
 
-#: ../admin.php:192
+#: ../admin.php:196
 msgid "HTML File Link is Error"
 msgstr "檔案連結錯誤"
 
-#: ../admin.php:195
+#: ../admin.php:199
 msgid "FTP Host:"
 msgstr "FTP 主機："
 
-#: ../admin.php:199
+#: ../admin.php:203
 msgid "FTP Port:"
 msgstr "FTP 連接埠："
 
-#: ../admin.php:203
+#: ../admin.php:207
 msgid "FTP Timeout:"
 msgstr "FTP 逾時："
 
-#: ../admin.php:207
+#: ../admin.php:211
 msgid "FTP Username:"
 msgstr "FTP 使用者名稱："
 
-#: ../admin.php:211
+#: ../admin.php:215
 msgid "FTP Password:"
 msgstr "FTP 密碼："
 
-#: ../admin.php:212
+#: ../admin.php:216
 msgid "Only when you want to change your password, enter it."
 msgstr "只有在您想要變更密碼的時候輸入"
 
-#: ../admin.php:215
+#: ../admin.php:219
 msgid "FTP Mode:"
 msgstr "FTP 模式："
 
-#: ../admin.php:216
+#: ../admin.php:220
 msgid "Passive"
 msgstr "被動"
 
-#: ../admin.php:216
+#: ../admin.php:220
 msgid "Active"
 msgstr "主動"
 
-#: ../admin.php:219
+#: ../admin.php:223
 msgid "FTP Directory:"
 msgstr "FTP 目錄："
 
-#: ../admin.php:223
+#: ../admin.php:227
 msgid "HTML link url:"
 msgstr "HTML 網址連結："
 
-#: ../admin.php:227
+#: ../admin.php:231
 msgid "Save & Test Changes"
 msgstr "儲存 & 測試 變更"
 
-#: ../admin.php:236
+#: ../admin.php:240
 msgid "Basic Options"
 msgstr "基本設定"
 
-#: ../admin.php:239
+#: ../admin.php:243
 msgid "Rename file:"
 msgstr "檔案重新命名："
 
-#: ../admin.php:240
-#: ../admin.php:245
+#: ../admin.php:244 ../admin.php:249
 msgid "disable"
 msgstr "停用"
 
-#: ../admin.php:240
-#: ../admin.php:245
+#: ../admin.php:244 ../admin.php:249
 msgid "enable"
 msgstr "啟用"
 
-#: ../admin.php:241
-msgid "Proposal enabled! Because the file name to avoid some of the resulting error can not be expected"
+#: ../admin.php:245
+msgid ""
+"Proposal enabled! Because the file name to avoid some of the resulting error "
+"can not be expected"
 msgstr "建議啟用！以避免一些因為檔名而產生的不可預期的錯誤"
 
-#: ../admin.php:244
+#: ../admin.php:248
 msgid "Auto delete local file:"
 msgstr "自動刪除本地檔案："
 
-#: ../admin.php:246
+#: ../admin.php:250
 msgid "Only enable the when you local storage space have limited."
 msgstr "只有在你本地儲存空間有限制的時候才啟用。"
 
-#: ../admin.php:249
+#: ../admin.php:254
 msgid "Save original file"
 msgstr "保留原始檔"
 
-#: ../admin.php:252
+#: ../admin.php:255
+msgid ""
+"If don't save original file, still have an 0 Byte file to keep the file name "
+"unique."
+msgstr "如果不保留原始檔，仍有一個 0 Byte 的檔案確保檔案名稱的唯一性。"
+
+#: ../admin.php:259
 msgid "Save Changes"
 msgstr "儲存變更"
 
-#: ../admin.php:261
+#: ../admin.php:268
 msgid "About Plugin"
 msgstr "關於外掛"
 
-#: ../admin.php:265
+#: ../admin.php:272
 msgid "Author's website"
 msgstr "作者的網站"
 
-#: ../admin.php:266
+#: ../admin.php:273
 msgid "Plugin webpage"
 msgstr "外掛網頁"
 
-#: ../admin.php:267
+#: ../admin.php:274
 msgid "Version history"
 msgstr "版本歷史"
 
-#: ../admin.php:268
+#: ../admin.php:275
 msgid "Version: "
 msgstr "版本："
 
-#: ../upload-to-ftp.php:86
+#: ../admin.php:282
+msgid "Donate me"
+msgstr "贊助我"
+
+#: ../admin.php:286
+msgid "You can buy me some special coffees if you like this plugin, thank you!"
+msgstr "如果你喜歡這一個外掛，請幫我買一些咖啡吧！<br />感謝你！"
+
+#: ../upload-to-ftp.php:85
 #, php-format
-msgid "Please go to <a href=\"%s\">Upload to ftp setting page</a> update you options."
+msgid ""
+"Please go to <a href=\"%s\">Upload to ftp setting page</a> update you "
+"options."
 msgstr "請前往 <a href=\"%s\">Upload to FTP 設定頁面</a> 設定FTP資料"
 
 #~ msgid "Change Log"
