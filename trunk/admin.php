@@ -164,9 +164,13 @@ if( !empty($_POST['U2FTP_Update_ftpsetting']) ) {
 }
 
 if( !empty($_POST['U2FTP_Update_setting']) ) {
-	$u2ftp_options['rename_file'] = (intval($_POST['u2ftp_rename_file']) == 1) ? 1 : 0;
-	$u2ftp_options['auto_delete_local'] = (intval($_POST['u2ftp_auto_delete_local']) == 1) ? 1 : 0;
-	$u2ftp_options['save_original_file'] = (intval($_POST['u2ftp_save_original_file']) == 1) ? 1 : 0;
+	$u2ftp_options['rename_file'] = intval($_POST['u2ftp_rename_file']) ? 1 : 0;
+	$u2ftp_options['auto_delete_local'] = intval($_POST['u2ftp_auto_delete_local']) ? 1 : 0;
+	if( $u2ftp_options['auto_delete_local'] ) {
+		$u2ftp_options['save_original_file'] = intval($_POST['u2ftp_save_original_file']) ? 1 : 0;
+	} else {
+		$u2ftp_options['save_original_file'] = 1;
+	}
 	if( update_option('U2FTP_options', $u2ftp_options) ) {
 		$text = '<span style="color:green">' . __('Updated Basic Options Success', 'upload-to-ftp') . '</span>';
 	}
@@ -246,7 +250,10 @@ if( !empty($_POST['U2FTP_Update_setting']) ) {
 			<br /><em><?php _e('Only enable the when you local storage space have limited.', 'upload-to-ftp'); ?></em></td>
 		</tr>
 		<tr>
-			<td><input type="checkbox" name="u2ftp_save_original_file" id="u2ftp_save_original_file" value="1" <?php checked('1', $u2ftp_options['save_original_file']); ?> /> <?php _e('Save original file', 'upload-to-ftp'); ?></td>
+			<td>
+				<input type="checkbox" name="u2ftp_save_original_file" id="u2ftp_save_original_file" value="1" <?php checked('1', $u2ftp_options['save_original_file']); ?> /> <?php _e('Save original file', 'upload-to-ftp'); ?>
+				<br /><em><?php _e('If don\'t save original file, still have an 0 Byte file to keep the file name unique.', 'upload-to-ftp'); ?></em>
+			</td>
 		</tr>
 		<tfoot><tr>
 			<td align="center"><input type="submit" name="U2FTP_Update_setting" class="button-primary" value="<?php _e('Save Changes', 'upload-to-ftp'); ?>" /></td>
@@ -254,11 +261,11 @@ if( !empty($_POST['U2FTP_Update_setting']) ) {
 		</tr></tfoot>
 	</table>
 </form></td>
-<td width="30">&nbsp;</td>
-<td valign="top">
+<td width="20">&nbsp;</td>
+<td width="150" valign="top">
 	<table class="widefat">
 		<thead><tr>
-			<th colspan="2"><strong><?php _e('About Plugin', 'upload-to-ftp'); ?></strong></th>
+			<th><strong><?php _e('About Plugin', 'upload-to-ftp'); ?></strong></th>
 		</tr></thead>
 		<tr>
 			<td>
@@ -266,6 +273,32 @@ if( !empty($_POST['U2FTP_Update_setting']) ) {
 				<p><a class="ure_rsb_link" target="_blank" href="http://wwpteach.com/upload-to-ftp"><?php _e('Plugin webpage', 'upload-to-ftp'); ?></a></p>
 				<p><a class="ure_rsb_link" target="_blank" href="http://wwpteach.com/upload-to-ftp/history"><?php _e('Version history', 'upload-to-ftp'); ?></a></p>
 				<p><?php _e('Version: ', 'upload-to-ftp'); echo(get_option('U2FTP_version'));?></p>
+			</td>
+		</tr>
+	</table>
+	<p>&nbsp;</p>
+	<table class="widefat">
+		<thead><tr>
+			<th><strong><?php _e('Donate me', 'upload-to-ftp'); ?></strong></th>
+		</tr></thead>
+		<tr>
+			<td>
+				<small><?php _e('You can buy me some special coffees if you like this plugin, thank you!', 'upload-to-ftp'); ?></small>
+				<?php if( defined('WPLANG') && WPLANG == 'zh_TW' ) { ?>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+	<input type="hidden" name="cmd" value="_s-xclick">
+	<input type="hidden" name="hosted_button_id" value="RLG8RJZGN7UEJ">
+	<input type="image" src="https://www.paypal.com/zh_HK/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">
+	<img alt="" border="0" src="https://www.paypalobjects.com/zh_TW/i/scr/pixel.gif" width="1" height="1">
+</form>
+				<?php } else { ?>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+	<input type="hidden" name="cmd" value="_s-xclick">
+	<input type="hidden" name="hosted_button_id" value="FKDTJ2FJXZDC2">
+	<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">
+	<img alt="" border="0" src="https://www.paypalobjects.com/zh_TW/i/scr/pixel.gif" width="1" height="1">
+</form>
+				<?php } ?>
 			</td>
 		</tr>
 	</table>
