@@ -3,7 +3,7 @@
 Plugin Name: Upload to FTP
 Plugin URI: http://wwpteach.com/upload-to-ftp
 Description: let you can upload file to and download host 
-Version: 0.1.3
+Version: 0.1.3.1
 Author: Richer Yang
 Author URI: http://fantasyworld.idv.tw/
 */
@@ -29,12 +29,12 @@ function upload_to_ftp_init() {
 		$u2ftp_options['auto_delete_local'] = 0;
 		$u2ftp_options['save_original_file'] = 1;
 		update_option('U2FTP_options', $u2ftp_options);
-		update_option('U2FTP_version', '0.1.3');
+		update_option('U2FTP_version', '0.1.3.1');
 	}
 }
 
 if( is_admin() ) {
-	if( version_compare(get_option('U2FTP_version', '0.1.3'), '0.1.3', '!=') ) {
+	if( version_compare(get_option('U2FTP_version', '0.1.3.1'), '0.1.3.1', '!=') ) {
 		include(dirname(__FILE__) . '/include/update.php');
 	}
 	$currentLocale = get_locale();
@@ -213,7 +213,10 @@ class Upload_to_FTP {
 				if( $this->do_upload_file($file['ftp_file'], $file['local_file']) ) {
 					if( $file['id'] != 0 ) {
 						$up_dir = dirname($file['ftp_file']);
-						$up_dir = str_replace($this->options['ftp_dir'], '', $up_dir) . '/';
+						if( $this->options['ftp_dir'] != '/' ) {
+							$up_dir = str_replace($this->options['ftp_dir'], '', $up_dir);
+						}
+						$up_dir .= '/';
 						$metadate = array(
 							'up_time' => $up_time,
 							'up_dir' => $up_dir
