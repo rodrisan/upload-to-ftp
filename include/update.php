@@ -1,5 +1,5 @@
 <?php
-$version = get_option('U2FTP_version', '0.1.4');
+$version = get_option('U2FTP_version', '0.1.5');
 if( version_compare($version, '0.0.6', '<') ) {
 	update_to_0_0_6();
 }
@@ -23,6 +23,10 @@ if( version_compare($version, '0.1.3', '<') ) {
 }
 if( version_compare($version, '0.1.4', '<') ) {
 	update_option('U2FTP_version', '0.1.4');
+}
+if( version_compare($version, '0.1.5', '<') ) {
+	update_to_0_1_5();
+	update_option('U2FTP_version', '0.1.5');
 }
 
 function update_to_0_0_6() {
@@ -89,5 +93,20 @@ function update_to_0_1_0() {
 
 function update_to_0_1_1() {
 	update_option('U2FTP_version', '0.1.1');
+}
+
+function update_to_0_1_5() {
+	global $wpdb;
+	$postmetas = $wpdb->get_results('SELECT `post_id` FROM ' . $wpdb->postmeta . " WHERE `meta_key` = 'file_to_ftp'");
+	if( $postmetas ) {
+		foreach( $postmetas as $postmeta ) {
+			$meta_date = get_post_meta($postmeta->post_id, 'file_to_ftp', true);
+			$meta_date['up_dir'] = trim($meta_date['up_dir'], '/');
+			if( $meta_date['up_dir'] != '' ) {
+				$meta_date['up_dir'] .= '/';
+			}
+			update_post_meta($postmeta->post_id, 'file_to_ftp', $meta_date);
+		}
+	}
 }
 ?>

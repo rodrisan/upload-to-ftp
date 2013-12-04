@@ -93,7 +93,7 @@ if( !empty($_POST['U2FTP_Update_ftpsetting']) ) {
 	if( !isset($temp[0]) ) {
 		$html_link_url = 'http://' . $html_link_url;
 	}
-	if( substr($html_link_url , -1) != '/' ) {
+	if( substr($html_link_url, -1) != '/' ) {
 		$html_link_url .= '/';
 	}
 
